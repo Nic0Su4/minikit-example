@@ -1,4 +1,5 @@
 "use client";
+import { IDKitWidget } from "@worldcoin/idkit";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 export const SignIn = () => {
@@ -15,6 +16,18 @@ export const SignIn = () => {
       <>
         Not signed in <br />
         <button onClick={() => signIn()}>Sign in</button>
+        <div className="my-4">
+          <IDKitWidget
+            app_id={process.env.NEXT_PUBLIC_APP_ID as `app_${string}`}
+            action="verify-test"
+            signal={"user_value"}
+            onSuccess={(response) => {
+              console.log(response);
+            }}
+          >
+            {({ open }) => <button onClick={open}>Verify with WorldID</button>}
+          </IDKitWidget>
+        </div>
       </>
     );
   }
