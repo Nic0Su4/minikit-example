@@ -1,5 +1,6 @@
+"use client";
+
 import axios from "axios";
-("use client");
 import {
   MiniKit,
   tokenToDecimals,
