@@ -77,7 +77,6 @@ export const WalletAuthBlock: React.FC = () => {
       {authResult && (
         <div>
           <h3>Datos de la Wallet:</h3>
-          <pre>{JSON.stringify(authResult, null, 2)}</pre>
           <p>Username: {MiniKit.user?.username}</p>
           <p>Dirección: {MiniKit.walletAddress}</p>
         </div>
