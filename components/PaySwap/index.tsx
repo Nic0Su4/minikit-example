@@ -1,1 +1,92 @@
 "use client";
+
+import React, { useState } from "react";
+import {
+  MiniKit,
+  PayCommandInput,
+  Tokens,
+  tokenToDecimals,
+} from "@worldcoin/minikit-js";
+
+const RECEIVER_ADDRESS = "0x676280f89a9bc77b3a0d6d7fe0937e8550c53982";
+
+export const PayBlock = () => {
+  const [status, setStatus] = useState("");
+  const [error, setError] = useState("");
+
+  const sendPayment = async (tokenWLD: number) => {
+    try {
+      const initRes = await fetch("/api/initiate-payment", { method: "POST" });
+      const { id: reference } = await initRes.json();
+      console.log("Referencia generada:", reference);
+
+      const payload: PayCommandInput = {
+        reference,
+        to: RECEIVER_ADDRESS,
+        tokens: [
+          {
+            symbol: Tokens.WLD,
+            token_amount: tokenToDecimals(tokenWLD, Tokens.WLD).toString(),
+          },
+        ],
+        description: "Pago de WLD a cuenta central para swap",
+      };
+
+      if (!MiniKit.isInstalled()) {
+        throw new Error("MiniKit no está instalado");
+      }
+
+      const { finalPayload } = await MiniKit.commandsAsync.pay(payload);
+      if (finalPayload.status !== "success") {
+        throw new Error("Error en el pago: " + finalPayload.error_code);
+      }
+      setStatus("Pago completado exitosamente. Referencia: " + reference);
+
+      setStatus("Confirmando el pago en el backend...");
+      const confirmRes = await fetch(`/api/confirm-payment`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(finalPayload),
+      });
+      const confirmData = await confirmRes.json();
+      if (!confirmData.success) {
+        throw new Error("Confirmación de pago fallida.");
+      }
+      setStatus("Pago confirmado. Ejecutando swap...");
+
+      const swapRes = await fetch("/api/perform-swap", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fromAddress: RECEIVER_ADDRESS,
+          toAmount: tokenToDecimals(tokenWLD, Tokens.WLD).toString(),
+        }),
+      });
+      const swapData = await swapRes.json();
+      if (!swapData.success) {
+        throw new Error("Swap fallido: " + swapData.error);
+      }
+      setStatus(
+        "Swap completado exitosamente. Transacción: " + swapData.transactionHash
+      );
+    } catch (error: any) {
+      console.error("Error en el pago:", error);
+      setError(error.message || "Error desconocido");
+      setStatus("");
+    }
+  };
+
+  return (
+    <div>
+      <button
+        onClick={() => {
+          sendPayment(0.2);
+        }}
+      >
+        Pagar (enviar WLD)
+      </button>
+      <p>Status: {status}</p>
+      <p>Error: {error}</p>
+    </div>
+  );
+};
