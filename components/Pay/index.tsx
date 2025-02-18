@@ -2,8 +2,8 @@
 
 import axios from "axios";
 import { MiniKit, tokenToDecimals, Tokens } from "@worldcoin/minikit-js";
-import { BrowserProvider } from "ethers";
 import { useState } from "react";
+import { useWaitForTransactionReceipt } from "@worldcoin/minikit-react";
 
 const receiverAddress = "0x676280f89a9bc77b3a0d6d7fe0937e8550c53982";
 
@@ -13,6 +13,15 @@ const USDCE_WORLDCHAIN_ADDRESS = "0x79A02482A880bCE3F13e09Da970dC34db4CD24d1";
 export const PayBlock = () => {
   const [status, setStatus] = useState<string>("");
   const [error, setError] = useState<string>("");
+  const [transactionId, setTransactionId] = useState<string>("");
+
+  // const {  } = useWaitForTransactionReceipt({
+  //   client: MiniKit,
+  //   appConfig: {
+  //     app_id: process.env.NEXT_PUBLIC_APP_ID!,
+  //   },
+  //   transactionId: transactionId,
+  // });
 
   const sendPaymentWithSwap = async (toAmount: number) => {
     const toTokenAmount = tokenToDecimals(toAmount, Tokens.USDCE).toString();
@@ -67,10 +76,10 @@ export const PayBlock = () => {
         return;
       }
       setStatus("Transacción enviada: " + finalPayload.transaction_id);
+      setTransactionId(finalPayload.transaction_id);
 
-      // Paso 5: Espera la confirmación y luego llama a tu endpoint de confirm-payment para verificar la transacción
       const confirmRes = await fetch(
-        `${process.env.NEXTAUTH_URL}/api/confirm-payment`,
+        `${process.env.NEXTAUTH_URL}/api/confirm-transaction`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
