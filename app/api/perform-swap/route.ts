@@ -4,28 +4,25 @@ import axios from "axios";
 
 export async function POST(req: NextRequest) {
   try {
-    const { fromAddress, toAmount } = await req.json();
-    if (!fromAddress || !toAmount) {
+    const { fromAddress, fromAmount } = await req.json();
+    if (!fromAddress || !fromAmount) {
       return NextResponse.json(
         { success: false, error: "Missing parameters" },
         { status: 400 }
       );
     }
 
-    const quoteResponse = await axios.get(
-      "https://li.quest/v1/quote/toAmount",
-      {
-        params: {
-          fromChain: 480,
-          toChain: 480,
-          fromToken: "0x2cfc85d8e48f8eab294be644d9e25c3030863003",
-          toToken: "0x79A02482A880bCE3F13e09Da970dC34db4CD24d1",
-          toAmount,
-          fromAddress,
-        },
-        headers: { accept: "application/json" },
-      }
-    );
+    const quoteResponse = await axios.get("https://li.quest/v1/quote", {
+      params: {
+        fromChain: 480,
+        toChain: 480,
+        fromToken: "0x2cfc85d8e48f8eab294be644d9e25c3030863003",
+        toToken: "0x79A02482A880bCE3F13e09Da970dC34db4CD24d1",
+        fromAmount,
+        fromAddress,
+      },
+      headers: { accept: "application/json" },
+    });
     const quote = quoteResponse.data;
     if (!quote.transactionRequest) {
       return NextResponse.json(

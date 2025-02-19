@@ -77,7 +77,7 @@ export const PayBlock = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           fromAddress: RECEIVER_ADDRESS,
-          toAmount: tokenToDecimals(tokenWLD, Tokens.WLD).toString(),
+          fromAmount: tokenToDecimals(tokenWLD, Tokens.WLD).toString(),
         }),
       });
       const swapData = await swapRes.json();
