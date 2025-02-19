@@ -2,23 +2,10 @@ import { MiniAppPaymentSuccessPayload } from "@worldcoin/minikit-js";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-interface IRequestPayload {
-  payload: MiniAppPaymentSuccessPayload;
-}
-
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    console.log("Body recibido:", body);
-
-    if (!body || !body.payload) {
-      return NextResponse.json(
-        { success: false, error: "El cuerpo no contiene 'payload'" },
-        { status: 400 }
-      );
-    }
-    const { payload } = body as IRequestPayload;
-    console.log(payload);
+    const payload = (await req.json()) as MiniAppPaymentSuccessPayload;
+    console.log("Payload: ", payload);
 
     // IMPORTANT: Here we should fetch the reference you created in /initiate-payment to ensure the transaction we are verifying is the same one we initiated
     //   const reference = getReferenceFromDB();
