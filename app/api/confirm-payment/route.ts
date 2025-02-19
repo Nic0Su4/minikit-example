@@ -41,15 +41,18 @@ export async function POST(req: NextRequest) {
       const transaction = await response.json();
       if (
         transaction.reference == reference &&
-        transaction.status !== "failed"
+        transaction.transaction_status !== "failed"
       ) {
         console.log("Transacción confirmada:", transaction);
         return NextResponse.json({ success: true });
       } else {
-        return NextResponse.json({
-          success: false,
-          error: "Transacción no confirmada",
-        });
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Transacción no confirmada",
+          },
+          { status: 400 }
+        );
       }
     } else {
       return NextResponse.json(
