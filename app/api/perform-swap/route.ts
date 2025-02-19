@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
       "https://worldchain-mainnet.g.alchemy.com/public"
     );
 
-    const signer = new Wallet(process.env.NEXTAUTH_SECRET!, provider);
+    const signer = new Wallet(process.env.BACKEND_PRIVATE_KEY!, provider);
 
     const txRequest = quote.transactionRequest;
 
