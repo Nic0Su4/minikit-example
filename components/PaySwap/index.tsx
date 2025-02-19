@@ -36,11 +36,29 @@ export const PayBlock = () => {
         throw new Error("MiniKit no está instalado");
       }
 
-      const { finalPayload } = await MiniKit.commandsAsync.pay(payload);
+      let finalPayload;
+      try {
+        const result = await MiniKit.commandsAsync.pay(payload);
+        finalPayload = result.finalPayload;
+      } catch (e: any) {
+        if (
+          e.message &&
+          e.message.includes("No handler for event miniapp-payment")
+        ) {
+          console.warn("Error de handler ignorado:", e.message);
+          throw new Error(
+            "No se pudo obtener finalPayload debido al error de handler"
+          );
+        } else {
+          throw e;
+        }
+      }
+
       if (finalPayload.status !== "success") {
         throw new Error("Error en el pago: " + finalPayload.error_code);
       }
       setStatus("Pago completado exitosamente. Referencia: " + reference);
+      console.log("Pago completado exitosamente. Referencia:", finalPayload);
 
       setStatus("Confirmando el pago en el backend...");
       const confirmRes = await fetch(`/api/confirm-payment`, {
@@ -80,7 +98,7 @@ export const PayBlock = () => {
     <div>
       <button
         onClick={() => {
-          sendPayment(0.2);
+          sendPayment(0.1);
         }}
       >
         Pagar (enviar WLD)
