@@ -39,6 +39,7 @@ export async function POST(req: NextRequest) {
         }
       );
       const transaction = await response.json();
+      console.log(transaction);
       if (
         transaction.reference == reference &&
         transaction.transaction_status !== "failed"
