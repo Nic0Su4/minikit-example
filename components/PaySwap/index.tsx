@@ -8,7 +8,7 @@ import {
   tokenToDecimals,
 } from "@worldcoin/minikit-js";
 
-const RECEIVER_ADDRESS = "0x676280f89a9bc77b3a0d6d7fe0937e8550c53982";
+const RECEIVER_ADDRESS = "0x669e29E89328B5D1627731b82fD503287971D358";
 
 export const PayBlock = () => {
   const [status, setStatus] = useState("");
