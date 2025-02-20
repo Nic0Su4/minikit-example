@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { JsonRpcProvider, Wallet } from "ethers";
+import { ethers } from "ethers";
 import axios from "axios";
 
 export async function POST(req: NextRequest) {
@@ -32,41 +32,17 @@ export async function POST(req: NextRequest) {
 
     console.log("Quote:", quote);
 
-    const provider = new JsonRpcProvider(
-      "https://worldchain-mainnet.g.alchemy.com/public"
+    const provider = new ethers.providers.JsonRpcProvider(
+      "https://worldchain-mainnet.g.alchemy.com/public",
+      480
     );
+    const wallet = ethers.Wallet.fromMnemonic(
+      process.env.BACKEND_MNEMONIC!
+    ).connect(provider);
 
-    const signer = new Wallet(process.env.BACKEND_PRIVATE_KEY!, provider);
+    const tx = await wallet.sendTransaction(quote.transactionRequest);
 
-    const dataDescriptor = Object.getOwnPropertyDescriptor(
-      quote.transactionRequest,
-      "data"
-    );
-    const data = dataDescriptor?.value;
-    if (!data || data === "") {
-      throw new Error("El campo 'data' está vacío");
-    }
-
-    const txRequest = {
-      to: quote.transactionRequest.to,
-      value: quote.transactionRequest.value
-        ? BigInt(quote.transactionRequest.value)
-        : 0n,
-      data: data,
-      gasLimit: quote.transactionRequest.gasLimit
-        ? BigInt(quote.transactionRequest.gasLimit)
-        : undefined,
-      gasPrice: quote.transactionRequest.gasPrice
-        ? BigInt(quote.transactionRequest.gasPrice)
-        : undefined,
-      nonce: quote.transactionRequest.nonce,
-      chainId: quote.transactionRequest.chainId,
-    };
-
-    const txResponse = await signer.sendTransaction(txRequest);
-    console.log(txResponse);
-
-    const receipt = await txResponse.wait();
+    const receipt = await tx.wait();
 
     if (!receipt) {
       return NextResponse.json(
@@ -77,7 +53,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      transactionHash: receipt.hash,
+      transactionHash: receipt.transactionHash,
       blockNumber: receipt.blockNumber,
     });
   } catch (error: any) {

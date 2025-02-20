@@ -103,8 +103,8 @@ export const PayBlock = () => {
       >
         Pagar (enviar WLD)
       </button>
-      <p>Status: {status}</p>
-      <p>Error: {error}</p>
+      <p className="text-wrap">Status: {status}</p>
+      <p className="text-wrap">Error: {error}</p>
     </div>
   );
 };
