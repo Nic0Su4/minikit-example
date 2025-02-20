@@ -37,7 +37,8 @@ export async function POST(req: NextRequest) {
       480
     );
     const wallet = ethers.Wallet.fromMnemonic(
-      process.env.BACKEND_MNEMONIC!
+      process.env.BACKEND_MNEMONIC!,
+      "m/44'/60'/0'/0/1"
     ).connect(provider);
 
     const tx = await wallet.sendTransaction(quote.transactionRequest);
