@@ -38,7 +38,17 @@ export async function POST(req: NextRequest) {
 
     const signer = new Wallet(process.env.BACKEND_PRIVATE_KEY!, provider);
 
-    const { from, ...txRequest } = quote.transactionRequest;
+    const txRequest = {
+      to: quote.transactionRequest.to,
+      value: quote.transactionRequest.value
+        ? BigInt(quote.transactionRequest.value)
+        : 0n,
+      data: quote.transactionRequest.data,
+      gasLimit: quote.transactionRequest.gasLimit
+        ? BigInt(quote.transactionRequest.gasLimit)
+        : undefined,
+      gasPrice: quote.transactionRequest.gasPrice,
+    };
     const txResponse = await signer.sendTransaction(txRequest);
 
     const receipt = await txResponse.wait();
