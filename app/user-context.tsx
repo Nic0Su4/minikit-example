@@ -1,3 +1,5 @@
+"use client";
+
 import React, { createContext, useState, useContext } from "react";
 
 // Define el tipo del contexto
