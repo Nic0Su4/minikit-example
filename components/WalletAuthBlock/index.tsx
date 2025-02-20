@@ -6,12 +6,15 @@ import {
   WalletAuthInput,
   MiniAppWalletAuthSuccessPayload,
 } from "@worldcoin/minikit-js";
+import { useRouter } from "next/navigation";
 
 export const WalletAuthBlock: React.FC = () => {
   const [authResult, setAuthResult] =
     useState<MiniAppWalletAuthSuccessPayload | null>(null);
   const [status, setStatus] = useState<string>("");
   const [userData, setUserData] = useState<any>(null);
+
+  const router = useRouter();
 
   const signInWithWallet = async () => {
     if (!MiniKit.isInstalled()) {
@@ -57,6 +60,8 @@ export const WalletAuthBlock: React.FC = () => {
         nonce
       );
     }
+
+    router.refresh();
   };
 
   const completeSiwe = async (
