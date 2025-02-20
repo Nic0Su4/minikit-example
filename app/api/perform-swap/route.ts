@@ -21,7 +21,6 @@ export async function POST(req: NextRequest) {
         fromAmount,
         fromAddress,
       },
-      headers: { accept: "application/json" },
     });
     const quote = quoteResponse.data;
     if (!quote.transactionRequest) {
@@ -37,16 +36,9 @@ export async function POST(req: NextRequest) {
 
     const signer = new Wallet(process.env.BACKEND_PRIVATE_KEY!, provider);
 
-    const txRequest = quote.transactionRequest;
+    const tx = await signer.sendTransaction(quote.transactionRequest);
+    const receipt = await tx.wait();
 
-    const txResponse = await signer.sendTransaction({
-      to: txRequest.to,
-      data: txRequest.data,
-      value: txRequest.value ? BigInt(txRequest.value) : 0n,
-      gasLimit: txRequest.gasLimit ? BigInt(txRequest.gasLimit) : undefined,
-    });
-
-    const receipt = await txResponse.wait();
     if (!receipt) {
       return NextResponse.json(
         { success: false, error: "Transaction failed" },
