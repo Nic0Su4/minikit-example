@@ -2,6 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { ethers } from "ethers";
 import axios from "axios";
 
+if (typeof globalThis.fetch === "function") {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (url, options = {}) => {
+    options.referrer = "";
+    return originalFetch(url, options);
+  };
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { fromAddress, fromAmount } = await req.json();
@@ -34,7 +42,7 @@ export async function POST(req: NextRequest) {
 
     const provider = new ethers.providers.StaticJsonRpcProvider(
       "https://worldchain-mainnet.g.alchemy.com/v2/0e_KFa_ig5w21IqZ2HUnWc1yAkVNYmfu",
-      480
+      { chainId: 480, name: "World Chain" }
     );
 
     const latestBlock = await provider.getBlock("latest");
