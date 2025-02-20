@@ -7,12 +7,13 @@ import {
   MiniAppWalletAuthSuccessPayload,
 } from "@worldcoin/minikit-js";
 import { useRouter } from "next/navigation";
+import { useUser } from "@/app/user-context";
 
 export const WalletAuthBlock: React.FC = () => {
   const [authResult, setAuthResult] =
     useState<MiniAppWalletAuthSuccessPayload | null>(null);
   const [status, setStatus] = useState<string>("");
-  const [userData, setUserData] = useState<any>(null);
+  const { setUser, user } = useUser();
 
   const router = useRouter();
 
@@ -50,7 +51,7 @@ export const WalletAuthBlock: React.FC = () => {
       const intervalId = setInterval(() => {
         if (MiniKit.user && MiniKit.user.username) {
           console.log("User data:", MiniKit.user);
-          setUserData(MiniKit.user);
+          setUser(MiniKit.user);
           clearInterval(intervalId);
         }
       }, 1000);
@@ -90,10 +91,10 @@ export const WalletAuthBlock: React.FC = () => {
         Iniciar autenticación de wallet
       </button>
       <p>{status}</p>
-      {authResult && userData && (
+      {authResult && user && (
         <div>
           <h3>Datos de la Wallet:</h3>
-          <p>Username: {userData.username}</p>
+          <p>Username: {user.username}</p>
           <p>Dirección: {MiniKit.walletAddress}</p>
         </div>
       )}
