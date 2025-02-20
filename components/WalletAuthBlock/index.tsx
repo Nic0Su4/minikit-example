@@ -78,7 +78,8 @@ export const WalletAuthBlock: React.FC = () => {
     const data = await response.json();
     if (data.status === "success" && data.isValid) {
       setStatus("Autenticación verificada exitosamente en backend");
-      console.log("User data", MiniKit.user);
+      console.log("User data", user);
+      setUser(MiniKit.user);
     } else {
       setStatus("Error en la verificación en backend: " + data.message);
     }
