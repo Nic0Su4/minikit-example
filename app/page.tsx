@@ -1,3 +1,5 @@
+"use client";
+
 import { PayBlock } from "@/components/PaySwap";
 import { VerifyBlock } from "@/components/Verify";
 import WalletAuthBlock from "@/components/WalletAuthBlock";
