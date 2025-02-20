@@ -87,6 +87,25 @@ if (typeof globalThis.fetch === "function") {
   };
 }
 
+async function waitForReceipt(
+  provider: ethers.providers.Provider,
+  txHash: string,
+  interval = 5000,
+  timeout = 60000
+): Promise<ethers.providers.TransactionReceipt> {
+  const start = Date.now();
+  while (true) {
+    const receipt = await provider.getTransactionReceipt(txHash);
+    if (receipt && receipt.blockNumber) {
+      return receipt;
+    }
+    if (Date.now() - start > timeout) {
+      throw new Error("Timeout waiting for transaction confirmation");
+    }
+    await new Promise((resolve) => setTimeout(resolve, interval));
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { fromAddress, fromAmount } = await req.json();
@@ -142,8 +161,8 @@ export async function POST(req: NextRequest) {
     const tx = await wallet.sendTransaction(quote.transactionRequest);
     console.log("Transaction submitted:", tx.hash);
 
-    const receipt = await tx.wait();
-    console.log("Transaction confirmed in block:", receipt.blockNumber);
+    const receipt = await waitForReceipt(provider, tx.hash);
+    console.log("Transaction confirmed:", receipt.transactionHash);
 
     return NextResponse.json({
       success: true,
