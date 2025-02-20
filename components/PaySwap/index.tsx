@@ -13,8 +13,14 @@ const RECEIVER_ADDRESS = "0x669e29E89328B5D1627731b82fD503287971D358";
 export const PayBlock = () => {
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const sendPayment = async (tokenWLD: number) => {
+    if (isProcessing) {
+      return;
+    }
+    setIsProcessing(true);
+    setError("");
     try {
       const initRes = await fetch("/api/initiate-payment", { method: "POST" });
       const { id: reference } = await initRes.json();
@@ -91,6 +97,8 @@ export const PayBlock = () => {
       console.error("Error en el pago:", error);
       setError(error.message || "Error desconocido");
       setStatus("");
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -100,8 +108,9 @@ export const PayBlock = () => {
         onClick={() => {
           sendPayment(0.1);
         }}
+        disabled={isProcessing}
       >
-        Pagar (enviar WLD)
+        {isProcessing ? "Procesando" : "Pagar (enviar WLD)"}
       </button>
       <div className="overflow-x-auto max-w-80">
         <p>Status: {status}</p>

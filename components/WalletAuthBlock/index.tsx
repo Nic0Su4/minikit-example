@@ -11,6 +11,7 @@ export const WalletAuthBlock: React.FC = () => {
   const [authResult, setAuthResult] =
     useState<MiniAppWalletAuthSuccessPayload | null>(null);
   const [status, setStatus] = useState<string>("");
+  const [userData, setUserData] = useState<any>(null);
 
   const signInWithWallet = async () => {
     if (!MiniKit.isInstalled()) {
@@ -42,6 +43,15 @@ export const WalletAuthBlock: React.FC = () => {
       setAuthResult(finalPayload as MiniAppWalletAuthSuccessPayload);
       setStatus("Wallet autenticada exitosamente");
       // Envía la respuesta al backend para verificar el SIWE message
+
+      const intervalId = setInterval(() => {
+        if (MiniKit.user && MiniKit.user.username) {
+          console.log("User data:", MiniKit.user);
+          setUserData(MiniKit.user);
+          clearInterval(intervalId);
+        }
+      }, 1000);
+
       await completeSiwe(
         finalPayload as MiniAppWalletAuthSuccessPayload,
         nonce
@@ -71,16 +81,15 @@ export const WalletAuthBlock: React.FC = () => {
   return (
     <div className="p-4 border border-gray-200 rounded-md mt-4">
       <h2>Wallet Auth (Sign in with Ethereum)</h2>
-      <button onClick={signInWithWallet} style={{ padding: "0.5rem 1rem" }}>
+      <button onClick={signInWithWallet} className="button">
         Iniciar autenticación de wallet
       </button>
       <p>{status}</p>
-      {authResult && (
+      {authResult && userData && (
         <div>
           <h3>Datos de la Wallet:</h3>
-          <p>Username: {MiniKit.user?.username}</p>
+          <p>Username: {userData.username}</p>
           <p>Dirección: {MiniKit.walletAddress}</p>
-          <p>{}</p>
         </div>
       )}
     </div>
