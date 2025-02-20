@@ -134,6 +134,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const { nonce, ...txRequestWithoutNonce } = quote.transactionRequest;
+
     console.log("Quote:", quote);
 
     const provider = new ethers.providers.StaticJsonRpcProvider(
@@ -158,7 +160,7 @@ export async function POST(req: NextRequest) {
       amountToApprove
     );
 
-    const tx = await wallet.sendTransaction(quote.transactionRequest);
+    const tx = await wallet.sendTransaction(txRequestWithoutNonce);
     console.log("Transaction submitted:", tx.hash);
 
     const receipt = await waitForReceipt(provider, tx.hash);
