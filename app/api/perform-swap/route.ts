@@ -30,14 +30,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    console.log("Quote:", quote);
+
     const provider = new JsonRpcProvider(
       "https://worldchain-mainnet.g.alchemy.com/public"
     );
 
     const signer = new Wallet(process.env.BACKEND_PRIVATE_KEY!, provider);
 
-    const tx = await signer.sendTransaction(quote.transactionRequest);
-    const receipt = await tx.wait();
+    const { from, ...txRequest } = quote.transactionRequest;
+    const txResponse = await signer.sendTransaction(txRequest);
+
+    const receipt = await txResponse.wait();
 
     if (!receipt) {
       return NextResponse.json(
