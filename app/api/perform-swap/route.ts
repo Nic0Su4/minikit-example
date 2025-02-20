@@ -55,19 +55,10 @@ export async function POST(req: NextRequest) {
 
     const tx = await wallet.sendTransaction(quote.transactionRequest);
 
-    const receipt = await tx.wait();
-
-    if (!receipt) {
-      return NextResponse.json(
-        { success: false, error: "Transaction failed" },
-        { status: 500 }
-      );
-    }
-
     return NextResponse.json({
       success: true,
-      transactionHash: receipt.transactionHash,
-      blockNumber: receipt.blockNumber,
+      transactionHash: tx.hash,
+      blockNumber: tx.blockNumber,
     });
   } catch (error: any) {
     console.error("Error in perform-swap endpoint:", error);
