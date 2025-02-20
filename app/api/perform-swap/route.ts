@@ -2,6 +2,83 @@ import { NextRequest, NextResponse } from "next/server";
 import { ethers } from "ethers";
 import axios from "axios";
 
+const ERC20_ABI = [
+  {
+    name: "approve",
+    inputs: [
+      {
+        internalType: "address",
+        name: "spender",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    name: "allowance",
+    inputs: [
+      {
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "spender",
+        type: "address",
+      },
+    ],
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+];
+
+async function checkAndSetAllowance(
+  wallet: ethers.Wallet,
+  tokenAddress: string,
+  approvalAddress: string,
+  amount: ethers.BigNumber
+) {
+  if (tokenAddress === ethers.constants.AddressZero) return;
+
+  const erc20 = new ethers.Contract(tokenAddress, ERC20_ABI, wallet);
+  const currentAllowance: ethers.BigNumber = await erc20.allowance(
+    await wallet.getAddress(),
+    approvalAddress
+  );
+
+  if (currentAllowance.lt(amount)) {
+    console.log(
+      `Allowance insuficiente (${currentAllowance.toString()}), aprobando ${amount.toString()}...`
+    );
+    const approveTx = await erc20.approve(approvalAddress, amount);
+    await approveTx.wait();
+    console.log("Aprobación completada.");
+  } else {
+    console.log("Allowance suficiente:", currentAllowance.toString());
+  }
+}
+
 if (typeof globalThis.fetch === "function") {
   const originalFetch = globalThis.fetch;
   globalThis.fetch = async (url, options = {}) => {
@@ -52,13 +129,26 @@ export async function POST(req: NextRequest) {
       process.env.BACKEND_MNEMONIC!,
       "m/44'/60'/0'/0/1"
     ).connect(provider);
+    console.log(wallet);
+
+    const amountToApprove = ethers.BigNumber.from(fromAmount);
+    await checkAndSetAllowance(
+      wallet,
+      quote.action.fromToken.address,
+      quote.estimate.approvalAddress,
+      amountToApprove
+    );
 
     const tx = await wallet.sendTransaction(quote.transactionRequest);
+    console.log("Transaction submitted:", tx.hash);
+
+    const receipt = await tx.wait();
+    console.log("Transaction confirmed in block:", receipt.blockNumber);
 
     return NextResponse.json({
       success: true,
-      transactionHash: tx.hash,
-      blockNumber: tx.blockNumber,
+      transactionHash: receipt.transactionHash,
+      blockNumber: receipt.blockNumber,
     });
   } catch (error: any) {
     console.error("Error in perform-swap endpoint:", error);
