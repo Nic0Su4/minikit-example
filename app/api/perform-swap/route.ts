@@ -33,9 +33,13 @@ export async function POST(req: NextRequest) {
     console.log("Quote:", quote);
 
     const provider = new ethers.providers.StaticJsonRpcProvider(
-      "https://worldchain-mainnet.gateway.tenderly.co/",
-      { chainId: 480, name: "World Chain" }
+      "https://worldchain-mainnet.g.alchemy.com/v2/0e_KFa_ig5w21IqZ2HUnWc1yAkVNYmfu",
+      480
     );
+
+    const latestBlock = await provider.getBlock("latest");
+    console.log("Latest block:", latestBlock.number);
+
     const wallet = ethers.Wallet.fromMnemonic(
       process.env.BACKEND_MNEMONIC!,
       "m/44'/60'/0'/0/1"
