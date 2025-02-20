@@ -47,7 +47,11 @@ export async function POST(req: NextRequest) {
       gasLimit: quote.transactionRequest.gasLimit
         ? BigInt(quote.transactionRequest.gasLimit)
         : undefined,
-      gasPrice: quote.transactionRequest.gasPrice,
+      gasPrice: quote.transactionRequest.gasPrice
+        ? BigInt(quote.transactionRequest.gasPrice)
+        : undefined,
+      nonce: quote.transactionRequest.nonce,
+      chainId: quote.transactionRequest.chainId,
     };
     const txResponse = await signer.sendTransaction(txRequest);
 
