@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
 
     console.log("Quote:", quote);
 
-    const provider = new ethers.providers.JsonRpcProvider(
+    const provider = new ethers.providers.StaticJsonRpcProvider(
       "https://worldchain-mainnet.g.alchemy.com/public",
       { chainId: 480, name: "World Chain" }
     );
