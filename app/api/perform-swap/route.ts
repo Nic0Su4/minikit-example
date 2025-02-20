@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
 
     const provider = new ethers.providers.JsonRpcProvider(
       "https://worldchain-mainnet.g.alchemy.com/public",
-      480
+      { chainId: 480, name: "World Chain" }
     );
     const wallet = ethers.Wallet.fromMnemonic(
       process.env.BACKEND_MNEMONIC!,
