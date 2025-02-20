@@ -38,12 +38,21 @@ export async function POST(req: NextRequest) {
 
     const signer = new Wallet(process.env.BACKEND_PRIVATE_KEY!, provider);
 
+    const dataDescriptor = Object.getOwnPropertyDescriptor(
+      quote.transactionRequest,
+      "data"
+    );
+    const data = dataDescriptor?.value;
+    if (!data || data === "") {
+      throw new Error("El campo 'data' está vacío");
+    }
+
     const txRequest = {
       to: quote.transactionRequest.to,
       value: quote.transactionRequest.value
         ? BigInt(quote.transactionRequest.value)
         : 0n,
-      data: quote.transactionRequest.data,
+      data: data,
       gasLimit: quote.transactionRequest.gasLimit
         ? BigInt(quote.transactionRequest.gasLimit)
         : undefined,
@@ -53,7 +62,9 @@ export async function POST(req: NextRequest) {
       nonce: quote.transactionRequest.nonce,
       chainId: quote.transactionRequest.chainId,
     };
+
     const txResponse = await signer.sendTransaction(txRequest);
+    console.log(txResponse);
 
     const receipt = await txResponse.wait();
 
