@@ -60,10 +60,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, order: orderResponse });
   } catch (error: any) {
-    console.error(
-      "Error in auto-swap endpoint:",
-      error.response?.data || error.message
-    );
+    console.error("Error in auto-swap endpoint:", error);
     return NextResponse.json(
       { success: false, error: error.message },
       { status: 500 }
