@@ -15,6 +15,35 @@ export const PayBlock = () => {
   const [error, setError] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
 
+  const pollAutoSwap = async (tokenWLD: number) => {
+    const interval = 10000;
+    const maxAttempts = 30;
+    let attempts = 0;
+    while (attempts < maxAttempts) {
+      setStatus(
+        `Esperando que los WLD se reflejen en Binance... (intento ${
+          attempts + 1
+        }/${maxAttempts})`
+      );
+      const swapRes = await fetch("/api/binance-spot", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        // En este ejemplo, enviamos la cantidad a vender
+        body: JSON.stringify({
+          quantity: tokenToDecimals(tokenWLD, Tokens.WLD).toString(),
+        }),
+      });
+      const swapData = await swapRes.json();
+      if (swapData.success) {
+        return swapData;
+      }
+      // Espera antes de volver a intentarlo
+      await new Promise((resolve) => setTimeout(resolve, interval));
+      attempts++;
+    }
+    throw new Error("Swap no ejecutado dentro del tiempo esperado");
+  };
+
   const sendPayment = async (tokenWLD: number) => {
     if (isProcessing) {
       return;
@@ -76,7 +105,7 @@ export const PayBlock = () => {
       if (!confirmData.success) {
         throw new Error("Confirmación de pago fallida.");
       }
-      // setStatus("Pago confirmado. Ejecutando swap...");
+      setStatus("Pago confirmado en el backend");
 
       // const swapRes = await fetch("/api/perform-swap", {
       //   method: "POST",
@@ -93,6 +122,11 @@ export const PayBlock = () => {
       // setStatus(
       //   "Swap completado exitosamente. Transacción: " + swapData.transactionHash
       // );
+
+      setStatus("Esperando que los WLD se reflejen en Binance...");
+      const swapData = await pollAutoSwap(tokenWLD);
+      setStatus("Swap completado exitosamente. Transacción: " + swapData.order);
+      console.log("Swap completado exitosamente:", swapData);
     } catch (error: any) {
       console.error("Error en el pago:", error);
       setError(error.message || "Error desconocido");
