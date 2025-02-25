@@ -25,19 +25,20 @@ export const PayBlock = () => {
           attempts + 1
         }/${maxAttempts})`
       );
-      const swapRes = await fetch("/api/binance-spot", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        // En este ejemplo, enviamos la cantidad a vender
-        body: JSON.stringify({
-          quantity: tokenToDecimals(tokenWLD, Tokens.WLD).toString(),
-        }),
-      });
+      const swapRes = await fetch(
+        "https://kipi-backend.onrender.com/binance-swap",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            quantity: tokenToDecimals(tokenWLD, Tokens.WLD).toString(),
+          }),
+        }
+      );
       const swapData = await swapRes.json();
       if (swapData.success) {
         return swapData;
       }
-      // Espera antes de volver a intentarlo
       await new Promise((resolve) => setTimeout(resolve, interval));
       attempts++;
     }
