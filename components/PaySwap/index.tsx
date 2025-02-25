@@ -141,7 +141,7 @@ export const PayBlock = () => {
     <div>
       <button
         onClick={() => {
-          sendPayment(0.1);
+          sendPayment(4.7);
         }}
         disabled={isProcessing}
       >
