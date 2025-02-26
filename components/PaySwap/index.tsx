@@ -14,8 +14,6 @@ export const PayBlock = () => {
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
-
-  // const pollAutoSwap = async (tokenWLD: number) => {
   //   const interval = 10000;
   //   const maxAttempts = 30;
   //   let attempts = 0;
@@ -123,11 +121,6 @@ export const PayBlock = () => {
       setStatus(
         "Swap completado exitosamente. Transacción: " + swapData.transactionHash
       );
-
-      // setStatus("Esperando que los WLD se reflejen en Binance...");
-      // const swapData = await pollAutoSwap(tokenWLD);
-      // setStatus("Swap completado exitosamente. Transacción: " + swapData.order);
-      // console.log("Swap completado exitosamente:", swapData);
     } catch (error: any) {
       console.error("Error en el pago:", error);
       setError(error.message || "Error desconocido");

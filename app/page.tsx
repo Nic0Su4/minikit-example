@@ -1,10 +1,9 @@
 "use client";
 
 import { PayBlock } from "@/components/PaySwap";
-import { VerifyBlock } from "@/components/Verify";
 import WalletAuthBlock from "@/components/WalletAuthBlock";
-import { MiniKit } from "@worldcoin/minikit-js";
 import { useUser } from "./user-context";
+import ConversionRateComponent from "@/components/ConversionRate";
 
 export default function Home() {
   const { user } = useUser();
@@ -13,6 +12,7 @@ export default function Home() {
       {/* <VerifyBlock /> */}
       <WalletAuthBlock />
       {user?.username && <PayBlock />}
+      <ConversionRateComponent />
     </main>
   );
 }
