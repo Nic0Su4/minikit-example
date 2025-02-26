@@ -32,6 +32,8 @@ export default function ConversionRateComponent() {
   const [conversionRate, setConversionRate] = useState(null);
 
   useEffect(() => {
+    fetchConversionRate();
+
     // const getRate = async () => {
     //   const rate = await fetchConversionRate();
     //   setConversionRate(rate);
