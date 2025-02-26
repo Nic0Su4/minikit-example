@@ -52,7 +52,12 @@ export default function ConversionRateComponent() {
   return (
     <div>
       {conversionRate !== null ? (
-        <p>Tasa de conversión: 1 PEN = {conversionRate.toFixed(6)} WLD</p>
+        <>
+          <p>Tasa de conversión: 1 PEN = {conversionRate.toFixed(6)} WLD</p>
+          <p>
+            Tasa de conversión: 1 WLD = {(1 / conversionRate).toFixed(6)} PEN
+          </p>
+        </>
       ) : (
         <p>Cargando tasa de conversión...</p>
       )}
