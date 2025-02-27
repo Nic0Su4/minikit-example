@@ -1,28 +1,62 @@
 "use client";
 
-import React, { createContext, useState, useContext } from "react";
+import type React from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  type ReactNode,
+  useEffect,
+} from "react";
+import { MiniKit } from "@worldcoin/minikit-js";
 
-// Define el tipo del contexto
-interface IUserContext {
-  user: any;
-  setUser: React.Dispatch<React.SetStateAction<any>>;
+// Define the user type based on MiniKit.user structure
+type WorldAppUser = {
+  username: string | null;
+  profilePictureUrl: string | null;
+  walletAddress: string | null;
+};
+
+interface UserContextType {
+  user: WorldAppUser | null;
+  setUser: React.Dispatch<React.SetStateAction<WorldAppUser | null>>;
+  isLoading: boolean;
 }
 
-// Crea el contexto con un valor por defecto que cumpla con el tipo
-export const UserContext = createContext<IUserContext>({
-  user: null,
-  setUser: () => {}, // función vacía por defecto
-});
+const UserContext = createContext<UserContextType | undefined>(undefined);
 
-export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const [user, setUser] = useState<any>(null);
+export const UserProvider = ({ children }: { children: ReactNode }) => {
+  const [user, setUser] = useState<WorldAppUser | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    // Check if user is already authenticated on initial load
+    const checkAuthStatus = async () => {
+      try {
+        if (MiniKit.isInstalled() && MiniKit.user && MiniKit.user.username) {
+          setUser(MiniKit.user);
+        }
+      } catch (error) {
+        console.error("Error checking auth status:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkAuthStatus();
+  }, []);
+
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser, isLoading }}>
       {children}
     </UserContext.Provider>
   );
 };
 
-export const useUser = () => useContext(UserContext);
+export const useUser = (): UserContextType => {
+  const context = useContext(UserContext);
+  if (context === undefined) {
+    throw new Error("useUser must be used within a UserProvider");
+  }
+  return context;
+};
