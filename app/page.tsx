@@ -1,15 +1,22 @@
 "use client";
 
-import { PayBlock } from "@/components/PaySwap";
 import WalletAuthBlock from "@/components/WalletAuthBlock";
 import { useUser } from "./user-context";
-import ConversionRateComponent from "@/components/ConversionRate";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Loader2, Sparkles, TrendingUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-export default function Home() {
+export default function LoginPage() {
   const { user, isLoading } = useUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user) {
+      router.push("/home");
+    }
+  }, [user, router]);
 
   if (isLoading) {
     return (
@@ -20,31 +27,21 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-4 md:p-8 lg:p-24">
-      <div className="w-full max-w-md space-y-6">
-        <h1 className="text-3xl font-bold text-center mb-6">WorldApp Demo</h1>
+    <div className="flex min-h-screen flex-col items-center justify-center p-4 bg-background">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold">Kipi Marketplace</h1>
+          <p className="text-muted-foreground mt-2">
+            Conecta tu wallet para comenzar
+          </p>
+        </div>
 
         <WalletAuthBlock />
 
-        {user?.username && (
-          <Tabs defaultValue="pay" className="w-full mt-8">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="pay">Pagos</TabsTrigger>
-              <TabsTrigger value="rates">Tasas de Conversión</TabsTrigger>
-            </TabsList>
-            <TabsContent value="pay">
-              <Card className="p-4">
-                <PayBlock />
-              </Card>
-            </TabsContent>
-            <TabsContent value="rates">
-              <Card className="p-4">
-                <ConversionRateComponent />
-              </Card>
-            </TabsContent>
-          </Tabs>
-        )}
+        <p className="text-center text-sm text-muted-foreground">
+          Al conectar tu wallet, aceptas nuestros términos y condiciones
+        </p>
       </div>
-    </main>
+    </div>
   );
 }

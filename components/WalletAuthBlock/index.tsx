@@ -40,6 +40,12 @@ export const WalletAuthBlock: React.FC = () => {
     }
   }, [setUser]);
 
+  useEffect(() => {
+    if (success && user) {
+      router.push("/home");
+    }
+  }, [success, user, router]);
+
   const signInWithWallet = async () => {
     try {
       setIsLoading(true);
