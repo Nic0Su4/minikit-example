@@ -21,12 +21,9 @@ import { Button } from "../ui/button";
 import { Loader2, XCircle, Wallet } from "lucide-react";
 
 export const WalletAuthBlock: React.FC = () => {
-  const [authResult, setAuthResult] =
-    useState<MiniAppWalletAuthSuccessPayload | null>(null);
   const [status, setStatus] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<boolean>(false);
   const { setUser, user } = useUser();
 
   const router = useRouter();
@@ -42,7 +39,6 @@ export const WalletAuthBlock: React.FC = () => {
     try {
       setIsLoading(true);
       setError(null);
-      setSuccess(false);
 
       if (!MiniKit.isInstalled()) {
         setError(
@@ -78,7 +74,6 @@ export const WalletAuthBlock: React.FC = () => {
         setIsLoading(false);
         return;
       } else {
-        setAuthResult(finalPayload as MiniAppWalletAuthSuccessPayload);
         setStatus("Wallet autenticada exitosamente");
 
         const maxAttempts = 10;
@@ -148,13 +143,6 @@ export const WalletAuthBlock: React.FC = () => {
         }`
       );
     }
-  };
-
-  const handleLogout = () => {
-    setUser(null);
-    setAuthResult(null);
-    setSuccess(false);
-    setStatus("");
   };
 
   return (
