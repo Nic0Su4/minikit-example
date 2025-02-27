@@ -169,13 +169,6 @@ export const WalletAuthBlock: React.FC = () => {
     return username.substring(0, 2).toUpperCase();
   };
 
-  const truncateAddress = (address: string) => {
-    if (!address) return "";
-    return `${address.substring(0, 6)}...${address.substring(
-      address.length - 4
-    )}`;
-  };
-
   return (
     <Card className="w-full max-w-md shadow-lg">
       <CardHeader className="space-y-1">
@@ -210,42 +203,6 @@ export const WalletAuthBlock: React.FC = () => {
             <p className="text-sm text-muted-foreground">
               {status || "Procesando..."}
             </p>
-          </div>
-        )}
-
-        {success && user && (
-          <div className="space-y-4">
-            <Alert variant="default" className="bg-green-50 border-green-200">
-              <CheckCircle2 className="h-4 w-4 text-green-600" />
-              <AlertTitle className="text-green-700">
-                Autenticado correctamente
-              </AlertTitle>
-              <AlertDescription className="text-green-600">
-                Tu wallet está conectada y verificada
-              </AlertDescription>
-            </Alert>
-
-            <div className="flex items-center space-x-4 p-4 bg-muted/50 rounded-lg">
-              <Avatar className="h-12 w-12 border-2 border-primary/20">
-                <AvatarImage
-                  src={user.profilePictureUrl || ""}
-                  alt={user.username || ""}
-                />
-                <AvatarFallback className="bg-primary/10 text-primary">
-                  {user.username ? getInitials(user.username) : "WA"}
-                </AvatarFallback>
-              </Avatar>
-
-              <div className="space-y-1">
-                <p className="font-medium">
-                  {user.username || "Usuario WorldApp"}
-                </p>
-                <p className="text-sm text-muted-foreground flex items-center">
-                  <Wallet className="h-3 w-3 mr-1 inline" />
-                  {truncateAddress(MiniKit.walletAddress || "")}
-                </p>
-              </div>
-            </div>
           </div>
         )}
 
