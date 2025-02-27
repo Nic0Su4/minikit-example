@@ -16,11 +16,9 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { Badge } from "../ui/badge";
 import { Alert, AlertTitle, AlertDescription } from "../ui/alert";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
-import { Loader2, CheckCircle2, XCircle, Wallet } from "lucide-react";
+import { Loader2, XCircle, Wallet } from "lucide-react";
 
 export const WalletAuthBlock: React.FC = () => {
   const [authResult, setAuthResult] =
