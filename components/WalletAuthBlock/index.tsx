@@ -107,7 +107,6 @@ export const WalletAuthBlock: React.FC = () => {
       );
     } finally {
       setIsLoading(false);
-      router.refresh();
     }
   };
 
