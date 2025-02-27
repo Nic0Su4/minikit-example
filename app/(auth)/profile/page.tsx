@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser } from "../user-context";
+import { useUser } from "../../user-context";
 import WalletAuthBlock from "@/components/WalletAuthBlock";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
