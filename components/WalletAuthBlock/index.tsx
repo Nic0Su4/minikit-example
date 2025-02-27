@@ -24,7 +24,7 @@ export const WalletAuthBlock: React.FC = () => {
   const [status, setStatus] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const { setUser, user } = useUser();
+  const { setUser } = useUser();
 
   const router = useRouter();
 
