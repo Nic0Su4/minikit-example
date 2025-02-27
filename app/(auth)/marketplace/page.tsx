@@ -81,15 +81,6 @@ export default function MarketplacePage() {
       <header className="sticky top-0 z-10 bg-background border-b p-4">
         <div className="flex items-center justify-between max-w-md mx-auto">
           <h1 className="text-xl font-bold">Kipi Marketplace</h1>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => router.push("/home")}
-            className="mr-2"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <h1 className="text-xl font-bold flex-1">Marketplace</h1>
           {user?.username && (
             <span className="text-sm text-muted-foreground">
               {user.username}

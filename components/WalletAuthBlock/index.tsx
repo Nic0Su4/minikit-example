@@ -147,10 +147,6 @@ export const WalletAuthBlock: React.FC = () => {
         setStatus("Autenticación verificada exitosamente");
         setUser(MiniKit.user);
         setSuccess(true);
-      } else {
-        setError(
-          `Error en la verificación: ${data.message || "Verificación fallida"}`
-        );
       }
     } catch (err) {
       console.error("Error completing SIWE verification:", err);
