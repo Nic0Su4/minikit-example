@@ -2,7 +2,6 @@
 
 import { useUser } from "@/app/user-context";
 import PayProduct from "@/components/PayProduct";
-import WalletAuthBlock from "@/components/WalletAuthBlock";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,10 +12,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, ShoppingBag, Tag, Search } from "lucide-react";
+import { Loader2, ShoppingBag, Tag, Search, ArrowLeft } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 // Productos de ejemplo
 const sampleProducts = [
@@ -60,6 +60,7 @@ export default function MarketplacePage() {
   const { user, isLoading } = useUser();
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [showPayment, setShowPayment] = useState(false);
+  const router = useRouter();
 
   if (isLoading) {
     return (
@@ -75,23 +76,35 @@ export default function MarketplacePage() {
   };
 
   return (
-    <main className="flex flex-col min-h-screen bg-background">
+    <div className="flex flex-col min-h-screen bg-background">
       {/* Header fijo */}
       <header className="sticky top-0 z-10 bg-background border-b p-4">
         <div className="flex items-center justify-between max-w-md mx-auto">
           <h1 className="text-xl font-bold">Kipi Marketplace</h1>
-          {user?.username ? (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => router.push("/home")}
+            className="mr-2"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <h1 className="text-xl font-bold flex-1">Marketplace</h1>
+          {user?.username && (
             <span className="text-sm text-muted-foreground">
-              Hola, {user.username}
+              {user.username}
             </span>
-          ) : null}
+          )}
         </div>
       </header>
 
       <div className="flex-1 p-4 max-w-md mx-auto w-full">
         {!user?.username ? (
-          <div className="my-8">
-            <WalletAuthBlock />
+          <div className="text-center py-8">
+            <p>Por favor, inicia sesión para ver los productos</p>
+            <Button className="mt-4" onClick={() => router.push("/")}>
+              Iniciar sesión
+            </Button>
           </div>
         ) : showPayment ? (
           <div className="my-8 space-y-4">
@@ -263,6 +276,6 @@ export default function MarketplacePage() {
           </Button>
         </div>
       </nav>
-    </main>
+    </div>
   );
 }

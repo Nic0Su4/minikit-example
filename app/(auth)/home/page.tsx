@@ -3,10 +3,12 @@
 import { useUser } from "@/app/user-context";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Sparkles, TrendingUp } from "lucide-react";
+import { Loader2, ShoppingBag, Sparkles, TrendingUp } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function HomePage() {
   const { user, isLoading } = useUser();
+  const router = useRouter();
 
   if (isLoading) {
     return (
@@ -52,8 +54,13 @@ export default function HomePage() {
                   </p>
                 </div>
               </div>
-              <Button className="w-full" variant="outline">
-                Ver más
+              <Button
+                className="w-full"
+                variant="outline"
+                onClick={() => router.push("/marketplace")}
+              >
+                <ShoppingBag className="mr-2 h-4 w-4" />
+                Ir al Marketplace
               </Button>
             </div>
           </CardContent>
