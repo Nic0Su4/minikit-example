@@ -36,15 +36,9 @@ export const WalletAuthBlock: React.FC = () => {
   useEffect(() => {
     if (MiniKit.isInstalled() && MiniKit.user && MiniKit.user.username) {
       setUser(MiniKit.user);
-      setSuccess(true);
-    }
-  }, [setUser]);
-
-  useEffect(() => {
-    if (success && user) {
       router.push("/home");
     }
-  }, [success, user, router]);
+  }, [setUser, router]);
 
   const signInWithWallet = async () => {
     try {
@@ -97,7 +91,7 @@ export const WalletAuthBlock: React.FC = () => {
             console.log("User data:", MiniKit.user);
             setUser(MiniKit.user);
             clearInterval(intervalId);
-            setSuccess(true);
+            router.push("/home");
           } else if (attempts >= maxAttempts) {
             clearInterval(intervalId);
             setError(
@@ -146,7 +140,7 @@ export const WalletAuthBlock: React.FC = () => {
       if (data.status === "success" && data.isValid) {
         setStatus("Autenticación verificada exitosamente");
         setUser(MiniKit.user);
-        setSuccess(true);
+        router.push("/home");
       }
     } catch (err) {
       console.error("Error completing SIWE verification:", err);
@@ -165,24 +159,10 @@ export const WalletAuthBlock: React.FC = () => {
     setStatus("");
   };
 
-  const getInitials = (username: string) => {
-    return username.substring(0, 2).toUpperCase();
-  };
-
   return (
     <Card className="w-full max-w-md shadow-lg">
       <CardHeader className="space-y-1">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-2xl font-bold">Wallet Auth</CardTitle>
-          {success && (
-            <Badge
-              variant="outline"
-              className="bg-green-50 text-green-700 border-green-200"
-            >
-              Conectado
-            </Badge>
-          )}
-        </div>
+        <CardTitle className="text-2xl font-bold">Wallet Auth</CardTitle>
         <CardDescription>
           Inicia sesión con tu wallet de Ethereum a través de WorldApp
         </CardDescription>
@@ -206,7 +186,7 @@ export const WalletAuthBlock: React.FC = () => {
           </div>
         )}
 
-        {!isLoading && !success && (
+        {!isLoading && (
           <div className="space-y-4">
             <div className="rounded-lg border p-3 bg-muted/50">
               <p className="text-sm text-muted-foreground">
@@ -225,35 +205,24 @@ export const WalletAuthBlock: React.FC = () => {
       </CardContent>
 
       <CardFooter>
-        {!success ? (
-          <Button
-            onClick={signInWithWallet}
-            disabled={isLoading}
-            className="w-full"
-            size="lg"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Conectando...
-              </>
-            ) : (
-              <>
-                <Wallet className="mr-2 h-4 w-4" />
-                Conectar Wallet
-              </>
-            )}
-          </Button>
-        ) : (
-          <Button
-            onClick={handleLogout}
-            variant="outline"
-            className="w-full"
-            size="lg"
-          >
-            Desconectar Wallet
-          </Button>
-        )}
+        <Button
+          onClick={signInWithWallet}
+          disabled={isLoading}
+          className="w-full"
+          size="lg"
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Conectando...
+            </>
+          ) : (
+            <>
+              <Wallet className="mr-2 h-4 w-4" />
+              Conectar Wallet
+            </>
+          )}
+        </Button>
       </CardFooter>
     </Card>
   );
