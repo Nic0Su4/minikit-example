@@ -44,7 +44,6 @@ export const WalletAuthBlock: React.FC = () => {
         setError(
           "WorldApp no está instalado. Por favor, instala WorldApp para continuar."
         );
-        setIsLoading(false);
         return;
       }
 
@@ -71,7 +70,6 @@ export const WalletAuthBlock: React.FC = () => {
 
       if (finalPayload.status === "error") {
         setError(`Error en wallet auth: ${finalPayload.details}`);
-        setIsLoading(false);
         return;
       } else {
         setStatus("Wallet autenticada exitosamente");
@@ -105,8 +103,6 @@ export const WalletAuthBlock: React.FC = () => {
           err instanceof Error ? err.message : String(err)
         }`
       );
-    } finally {
-      setIsLoading(false);
     }
   };
 
