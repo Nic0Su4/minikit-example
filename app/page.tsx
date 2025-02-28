@@ -2,9 +2,7 @@
 
 import WalletAuthBlock from "@/components/WalletAuthBlock";
 import { useUser } from "./user-context";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Sparkles, TrendingUp } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 

@@ -145,7 +145,7 @@ export const WalletAuthBlock: React.FC = () => {
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold">Wallet Auth</CardTitle>
         <CardDescription>
-          Inicia sesión con tu wallet de Ethereum a través de WorldApp
+          Inicia sesión con tu wallet a través de WorldApp
         </CardDescription>
       </CardHeader>
 
@@ -171,15 +171,9 @@ export const WalletAuthBlock: React.FC = () => {
           <div className="space-y-4">
             <div className="rounded-lg border p-3 bg-muted/50">
               <p className="text-sm text-muted-foreground">
-                Conecta tu wallet de Ethereum para acceder a todas las
-                funcionalidades de la aplicación.
+                Conecta tu wallet para acceder a todas las funcionalidades de la
+                aplicación.
               </p>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <div className="flex-1 h-px bg-muted"></div>
-              <span className="text-xs text-muted-foreground">WorldApp</span>
-              <div className="flex-1 h-px bg-muted"></div>
             </div>
           </div>
         )}
