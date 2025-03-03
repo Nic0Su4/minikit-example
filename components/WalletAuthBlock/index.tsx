@@ -86,7 +86,7 @@ export const WalletAuthBlock: React.FC = () => {
             clearInterval(intervalId);
 
             const { data, error } = await supabase.from("usuarios").upsert({
-              wallet_address: MiniKit.user.username,
+              wallet_address: MiniKit.walletAddress!,
               username: MiniKit.user.username,
               rol: "usuario",
             });
