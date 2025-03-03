@@ -12,7 +12,12 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (user) {
-      router.push("/home");
+      if (user.role === "usuario") {
+        router.push("/home");
+      }
+      if (user.role === "gerente") {
+        router.push("/dashboard/tienda");
+      }
     }
   }, [user, router]);
 

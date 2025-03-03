@@ -31,11 +31,19 @@ export const WalletAuthBlock: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (MiniKit.isInstalled() && MiniKit.user && MiniKit.user.username) {
-      setUser(MiniKit.user);
-      router.push("/home");
+    async function fetchData() {
+      if (MiniKit.isInstalled() && MiniKit.user && MiniKit.user.username) {
+        const { data: user } = await supabase
+          .from("usuarios")
+          .select("*")
+          .eq("wallet_address", MiniKit.walletAddress!)
+          .single();
+
+        setUser({ ...MiniKit.user, role: user!.rol });
+      }
     }
-  }, [setUser, router]);
+    fetchData();
+  }, [setUser, router, supabase]);
 
   const signInWithWallet = async () => {
     try {
@@ -82,7 +90,6 @@ export const WalletAuthBlock: React.FC = () => {
           attempts++;
           if (MiniKit.user && MiniKit.user.username) {
             console.log("User data:", MiniKit.user);
-            setUser(MiniKit.user);
             clearInterval(intervalId);
 
             const { data } = await supabase
@@ -90,6 +97,8 @@ export const WalletAuthBlock: React.FC = () => {
               .select("*")
               .eq("wallet_address", MiniKit.walletAddress!)
               .single();
+
+            setUser({ ...MiniKit.user, role: data!.rol });
 
             if (!data) {
               const { error } = await supabase.from("usuarios").upsert({
@@ -164,7 +173,13 @@ export const WalletAuthBlock: React.FC = () => {
       const data = await response.json();
       if (data.status === "success" && data.isValid) {
         setStatus("Autenticación verificada exitosamente");
-        setUser(MiniKit.user);
+        const { data: user } = await supabase
+          .from("usuarios")
+          .select("*")
+          .eq("wallet_address", MiniKit.walletAddress!)
+          .single();
+
+        setUser({ ...MiniKit.user!, role: user!.rol });
         router.push("/home");
       }
     } catch (err) {
