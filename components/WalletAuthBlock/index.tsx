@@ -101,6 +101,22 @@ export const WalletAuthBlock: React.FC = () => {
               if (error) {
                 console.error("Error al crear el usuario:", error);
               }
+            } else {
+              if (data.rol === "gerente") {
+                const { data: tiendaData, error: tiendaError } = await supabase
+                  .from("tiendas")
+                  .select("*")
+                  .eq("gerente_address", MiniKit.walletAddress!)
+                  .single();
+
+                if (tiendaError) {
+                  router.push(`/dashboard/create-store`);
+                }
+
+                if (tiendaData) {
+                  router.push(`/dashboard/tienda`);
+                }
+              }
             }
 
             router.push("/home");
