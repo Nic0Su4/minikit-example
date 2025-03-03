@@ -126,9 +126,10 @@ export const WalletAuthBlock: React.FC = () => {
                   router.push(`/dashboard/tienda`);
                 }
               }
+              if (data.rol === "usuario") {
+                router.push("/home");
+              }
             }
-
-            router.push("/home");
           } else if (attempts >= maxAttempts) {
             clearInterval(intervalId);
             setError(
@@ -180,7 +181,25 @@ export const WalletAuthBlock: React.FC = () => {
           .single();
 
         setUser({ ...MiniKit.user!, role: user!.rol });
-        router.push("/home");
+
+        if (data.rol === "gerente") {
+          const { data: tiendaData, error: tiendaError } = await supabase
+            .from("tiendas")
+            .select("*")
+            .eq("gerente_address", MiniKit.walletAddress!)
+            .single();
+
+          if (tiendaError) {
+            router.push(`/dashboard/create-store`);
+          }
+
+          if (tiendaData) {
+            router.push(`/dashboard/tienda`);
+          }
+        }
+        if (data.rol === "usuario") {
+          router.push("/home");
+        }
       }
     } catch (err) {
       console.error("Error completing SIWE verification:", err);
