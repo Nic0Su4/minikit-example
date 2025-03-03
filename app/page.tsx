@@ -7,19 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function LoginPage() {
-  const { user, isLoading } = useUser();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (user) {
-      if (user.role === "usuario") {
-        router.push("/home");
-      }
-      if (user.role === "gerente") {
-        router.push("/dashboard/tienda");
-      }
-    }
-  }, [user, router]);
+  const { isLoading } = useUser();
 
   if (isLoading) {
     return (
