@@ -19,8 +19,10 @@ import {
 import { Alert, AlertTitle, AlertDescription } from "../ui/alert";
 import { Button } from "../ui/button";
 import { Loader2, XCircle, Wallet } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
 
 export const WalletAuthBlock: React.FC = () => {
+  const supabase = createClient();
   const [status, setStatus] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -76,12 +78,23 @@ export const WalletAuthBlock: React.FC = () => {
 
         const maxAttempts = 10;
         let attempts = 0;
-        const intervalId = setInterval(() => {
+        const intervalId = setInterval(async () => {
           attempts++;
           if (MiniKit.user && MiniKit.user.username) {
             console.log("User data:", MiniKit.user);
             setUser(MiniKit.user);
             clearInterval(intervalId);
+
+            const { data, error } = await supabase.from("usuarios").upsert({
+              wallet_address: MiniKit.user.username,
+              username: MiniKit.user.username,
+              rol: "usuario",
+            });
+
+            if (error) {
+              console.error("Error al crear el usuario:", error);
+            }
+
             router.push("/home");
           } else if (attempts >= maxAttempts) {
             clearInterval(intervalId);

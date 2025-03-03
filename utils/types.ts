@@ -37,13 +37,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "detalles_pedido_pedido_id_fkey"
-            columns: ["pedido_id"]
-            isOneToOne: false
-            referencedRelation: "vista_ticket_pedido"
-            referencedColumns: ["pedido_id"]
-          },
-          {
             foreignKeyName: "detalles_pedido_producto_id_fkey"
             columns: ["producto_id"]
             isOneToOne: false
@@ -61,7 +54,7 @@ export type Database = {
           qr_code: string
           qr_estado: string | null
           tienda_id: number
-          usuario_uid: string | null
+          user_wallet: string | null
         }
         Insert: {
           created_at?: string | null
@@ -71,7 +64,7 @@ export type Database = {
           qr_code: string
           qr_estado?: string | null
           tienda_id: number
-          usuario_uid?: string | null
+          user_wallet?: string | null
         }
         Update: {
           created_at?: string | null
@@ -81,7 +74,7 @@ export type Database = {
           qr_code?: string
           qr_estado?: string | null
           tienda_id?: number
-          usuario_uid?: string | null
+          user_wallet?: string | null
         }
         Relationships: [
           {
@@ -92,11 +85,11 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "pedidos_usuario_uid_fkey"
-            columns: ["usuario_uid"]
+            foreignKeyName: "pedidos_user_wallet_fkey"
+            columns: ["user_wallet"]
             isOneToOne: false
             referencedRelation: "usuarios"
-            referencedColumns: ["uid"]
+            referencedColumns: ["wallet_address"]
           },
         ]
       }
@@ -145,7 +138,7 @@ export type Database = {
         Row: {
           created_at: string | null
           direccion: string
-          gerente_id: string | null
+          gerente_address: string | null
           id: number
           logo_url: string | null
           nombre: string
@@ -154,7 +147,7 @@ export type Database = {
         Insert: {
           created_at?: string | null
           direccion: string
-          gerente_id?: string | null
+          gerente_address?: string | null
           id?: never
           logo_url?: string | null
           nombre: string
@@ -163,7 +156,7 @@ export type Database = {
         Update: {
           created_at?: string | null
           direccion?: string
-          gerente_id?: string | null
+          gerente_address?: string | null
           id?: never
           logo_url?: string | null
           nombre?: string
@@ -171,11 +164,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "tiendas_gerente_id_fkey"
-            columns: ["gerente_id"]
+            foreignKeyName: "tiendas_gerente_address_fkey"
+            columns: ["gerente_address"]
             isOneToOne: false
             referencedRelation: "usuarios"
-            referencedColumns: ["uid"]
+            referencedColumns: ["wallet_address"]
           },
           {
             foreignKeyName: "tiendas_tipo_id_fkey"
@@ -206,45 +199,34 @@ export type Database = {
       }
       usuarios: {
         Row: {
-          correo_electronico: string
+          correo_electronico: string | null
           created_at: string | null
-          nombre: string
           rol: string
           telefono: string | null
-          uid: string
+          username: string
+          wallet_address: string
         }
         Insert: {
-          correo_electronico: string
+          correo_electronico?: string | null
           created_at?: string | null
-          nombre: string
           rol: string
           telefono?: string | null
-          uid: string
+          username: string
+          wallet_address: string
         }
         Update: {
-          correo_electronico?: string
+          correo_electronico?: string | null
           created_at?: string | null
-          nombre?: string
           rol?: string
           telefono?: string | null
-          uid?: string
+          username?: string
+          wallet_address?: string
         }
         Relationships: []
       }
     }
     Views: {
-      vista_ticket_pedido: {
-        Row: {
-          cantidad: number | null
-          direccion_tienda: string | null
-          estado_preparacion: string | null
-          nombre_producto: string | null
-          nombre_usuario: string | null
-          pedido_id: number | null
-          qr_estado: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       [_ in never]: never
