@@ -107,22 +107,7 @@ export const PayBlock = () => {
         throw new Error("Confirmación de pago fallida.");
       }
       setStatus("Pago confirmado en el backend");
-
-      // const swapRes = await fetch("/api/perform-swap", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({
-      //     fromAddress: RECEIVER_ADDRESS,
-      //     fromAmount: tokenToDecimals(tokenWLD, Tokens.WLD).toString(),
-      //   }),
-      // });
-      // const swapData = await swapRes.json();
-      // if (!swapData.success) {
-      //   throw new Error("Swap fallido: " + swapData.error);
-      // }
-      // setStatus(
-      //   "Swap completado exitosamente. Transacción: " + swapData.transactionHash
-      // );
+      console.log("Pago confirmago en el backend");
 
       setStatus("Esperando que los WLD se reflejen en Binance...");
       const swapData = await pollAutoSwap(tokenWLD);
@@ -141,7 +126,7 @@ export const PayBlock = () => {
     <div>
       <button
         onClick={() => {
-          sendPayment(1);
+          sendPayment(0.3);
         }}
         disabled={isProcessing}
       >
