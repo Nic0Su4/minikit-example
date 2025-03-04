@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import DeleteProductButton from "@/components/Gerente/Products/DeleteProductButton";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/client";
 import { AddProductDialog } from "@/components/Gerente/Products/AddProductDialog";
 import { getProductsByStore } from "./actions";
 import { MiniKit } from "@worldcoin/minikit-js";
@@ -26,7 +26,7 @@ export default function ProductsPage() {
 
   useEffect(() => {
     async function fetchData() {
-      const supabase = await createClient();
+      const supabase = createClient();
 
       const gerenteAddress = MiniKit.walletAddress;
 

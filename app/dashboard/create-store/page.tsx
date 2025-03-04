@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import CreateStoreForm from "@/components/Gerente/CreateStoreForm";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/client";
 import { MiniKit } from "@worldcoin/minikit-js";
 export default function CreateStorePage() {
   const router = useRouter();
@@ -19,7 +19,7 @@ export default function CreateStorePage() {
     }
 
     const fetchData = async () => {
-      const supabase = await createClient();
+      const supabase = createClient();
       const { data: user } = await supabase
         .from("usuarios")
         .select("*")
