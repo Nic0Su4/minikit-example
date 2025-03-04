@@ -31,7 +31,7 @@ export const PayBlock = () => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            quantity: tokenToDecimals(tokenWLD, Tokens.WLD).toString(),
+            fromAmount: tokenToDecimals(tokenWLD, Tokens.WLD).toString(),
           }),
         }
       );
