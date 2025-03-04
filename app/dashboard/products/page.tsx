@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,40 +15,56 @@ import { createClient } from "@/utils/supabase/server";
 import { AddProductDialog } from "@/components/Gerente/Products/AddProductDialog";
 import { getProductsByStore } from "./actions";
 import { MiniKit } from "@worldcoin/minikit-js";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
-export default async function ProductsPage() {
-  const supabase = await createClient();
+import { useEffect, useState } from "react";
 
-  const gerenteAddress = MiniKit.walletAddress;
+export default function ProductsPage() {
+  const [products, setProducts] = useState<any[]>([]);
+  const [tiendaId, setTiendaId] = useState<number>();
+  const router = useRouter();
 
-  if (!gerenteAddress) {
-    redirect("/");
-  }
+  useEffect(() => {
+    async function fetchData() {
+      const supabase = await createClient();
 
-  const { data: user } = await supabase
-    .from("usuarios")
-    .select("*")
-    .eq("wallet_address", gerenteAddress)
-    .single();
+      const gerenteAddress = MiniKit.walletAddress;
 
-  if (user?.rol === "usuario") {
-    redirect("/home");
-  }
+      if (!gerenteAddress) {
+        router.push("/");
+        return;
+      }
 
-  const { data: tienda } = await supabase
-    .from("tiendas")
-    .select("*")
-    .eq("gerente_address", gerenteAddress)
-    .single();
+      const { data: user } = await supabase
+        .from("usuarios")
+        .select("*")
+        .eq("wallet_address", gerenteAddress)
+        .single();
 
-  const products = await getProductsByStore(tienda!.id);
+      if (user?.rol === "usuario") {
+        router.push("/home");
+        return;
+      }
+
+      const { data: tienda } = await supabase
+        .from("tiendas")
+        .select("*")
+        .eq("gerente_address", gerenteAddress)
+        .single();
+
+      const products = await getProductsByStore(tienda!.id);
+      setProducts(products || []);
+      setTiendaId(tienda!.id);
+    }
+
+    fetchData();
+  }, [router]);
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Productos</h1>
-        <AddProductDialog tiendaId={tienda!.id} />
+        {tiendaId && <AddProductDialog tiendaId={tiendaId} />}
       </div>
       {products?.length === 0 || !products ? (
         <div>No hay productos, comienza añadiendo productos</div>

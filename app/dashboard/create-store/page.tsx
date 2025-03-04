@@ -1,30 +1,45 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import CreateStoreForm from "@/components/Gerente/CreateStoreForm";
 import { createClient } from "@/utils/supabase/server";
 import { MiniKit } from "@worldcoin/minikit-js";
-import { redirect } from "next/navigation";
-
-export default async function CreateStorePage() {
-  const supabase = await createClient();
-
+export default function CreateStorePage() {
+  const router = useRouter();
+  const [categories, setCategories] = useState<
+    { id: number; nombre: string }[] | null
+  >([]);
   const gerenteWallet = MiniKit.walletAddress;
 
-  if (!gerenteWallet) {
-    redirect("/");
-  }
+  useEffect(() => {
+    if (!gerenteWallet) {
+      router.push("/");
+      return;
+    }
 
-  const { data: user } = await supabase
-    .from("usuarios")
-    .select("*")
-    .eq("wallet_address", gerenteWallet)
-    .single();
+    const fetchData = async () => {
+      const supabase = await createClient();
+      const { data: user } = await supabase
+        .from("usuarios")
+        .select("*")
+        .eq("wallet_address", gerenteWallet)
+        .single();
 
-  if (user?.rol === "usuario") {
-    redirect("/home");
-  }
+      if (user?.rol === "usuario") {
+        router.push("/home");
+        return;
+      }
 
-  const { data: categories } = await supabase
-    .from("tipos_tiendas")
-    .select("id, nombre");
+      const { data: categories } = await supabase
+        .from("tipos_tiendas")
+        .select("id, nombre");
+
+      setCategories(categories || []);
+    };
+
+    fetchData();
+  }, [gerenteWallet, router]);
 
   return (
     <div className="flex items-center justify-center h-screen bg-primary">
@@ -33,10 +48,12 @@ export default async function CreateStorePage() {
         <p className="mb-6 text-gray-600">
           Llena los detalles para registrar tu tienda. El logo es opcional.
         </p>
-        <CreateStoreForm
-          gerenteWallet={gerenteWallet}
-          categories={categories}
-        />
+        {gerenteWallet && (
+          <CreateStoreForm
+            gerenteWallet={gerenteWallet}
+            categories={categories}
+          />
+        )}
       </div>
     </div>
   );

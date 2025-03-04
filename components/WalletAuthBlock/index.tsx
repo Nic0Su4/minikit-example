@@ -252,6 +252,7 @@ export const WalletAuthBlock: React.FC = () => {
 
       <CardFooter>
         <Button
+          type="button"
           onClick={signInWithWallet}
           disabled={isLoading}
           className="w-full"
