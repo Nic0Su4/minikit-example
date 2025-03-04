@@ -8,40 +8,42 @@ import {
   tokenToDecimals,
 } from "@worldcoin/minikit-js";
 
-const RECEIVER_ADDRESS = "0x669e29E89328B5D1627731b82fD503287971D358";
+const RECEIVER_ADDRESS = "0x4f2f92cf7c8d18f440bad599b4e9615838433220";
 
 export const PayBlock = () => {
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
-  //   const interval = 10000;
-  //   const maxAttempts = 30;
-  //   let attempts = 0;
-  //   while (attempts < maxAttempts) {
-  //     setStatus(
-  //       `Esperando que los WLD se reflejen en Binance... (intento ${
-  //         attempts + 1
-  //       }/${maxAttempts})`
-  //     );
-  //     const swapRes = await fetch(
-  //       "https://kipi-backend.onrender.com/binance-swap",
-  //       {
-  //         method: "POST",
-  //         headers: { "Content-Type": "application/json" },
-  //         body: JSON.stringify({
-  //           quantity: tokenToDecimals(tokenWLD, Tokens.WLD).toString(),
-  //         }),
-  //       }
-  //     );
-  //     const swapData = await swapRes.json();
-  //     if (swapData.success) {
-  //       return swapData;
-  //     }
-  //     await new Promise((resolve) => setTimeout(resolve, interval));
-  //     attempts++;
-  //   }
-  //   throw new Error("Swap no ejecutado dentro del tiempo esperado");
-  // };
+
+  const pollAutoSwap = async (tokenWLD: number) => {
+    const interval = 10000;
+    const maxAttempts = 30;
+    let attempts = 0;
+    while (attempts < maxAttempts) {
+      setStatus(
+        `Esperando que los WLD se reflejen en Binance... (intento ${
+          attempts + 1
+        }/${maxAttempts})`
+      );
+      const swapRes = await fetch(
+        "https://kipi-backend.onrender.com/binance-swap",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            quantity: tokenToDecimals(tokenWLD, Tokens.WLD).toString(),
+          }),
+        }
+      );
+      const swapData = await swapRes.json();
+      if (swapData.success) {
+        return swapData;
+      }
+      await new Promise((resolve) => setTimeout(resolve, interval));
+      attempts++;
+    }
+    throw new Error("Swap no ejecutado dentro del tiempo esperado");
+  };
 
   const sendPayment = async (tokenWLD: number) => {
     if (isProcessing) {
@@ -106,21 +108,26 @@ export const PayBlock = () => {
       }
       setStatus("Pago confirmado en el backend");
 
-      const swapRes = await fetch("/api/perform-swap", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fromAddress: RECEIVER_ADDRESS,
-          fromAmount: tokenToDecimals(tokenWLD, Tokens.WLD).toString(),
-        }),
-      });
-      const swapData = await swapRes.json();
-      if (!swapData.success) {
-        throw new Error("Swap fallido: " + swapData.error);
-      }
-      setStatus(
-        "Swap completado exitosamente. Transacción: " + swapData.transactionHash
-      );
+      // const swapRes = await fetch("/api/perform-swap", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({
+      //     fromAddress: RECEIVER_ADDRESS,
+      //     fromAmount: tokenToDecimals(tokenWLD, Tokens.WLD).toString(),
+      //   }),
+      // });
+      // const swapData = await swapRes.json();
+      // if (!swapData.success) {
+      //   throw new Error("Swap fallido: " + swapData.error);
+      // }
+      // setStatus(
+      //   "Swap completado exitosamente. Transacción: " + swapData.transactionHash
+      // );
+
+      setStatus("Esperando que los WLD se reflejen en Binance...");
+      const swapData = await pollAutoSwap(tokenWLD);
+      setStatus("Swap completado exitosamente. Transacción: " + swapData.order);
+      console.log("Swap completado exitosamente:", swapData);
     } catch (error: any) {
       console.error("Error en el pago:", error);
       setError(error.message || "Error desconocido");
@@ -134,7 +141,7 @@ export const PayBlock = () => {
     <div>
       <button
         onClick={() => {
-          sendPayment(0.1);
+          sendPayment(1);
         }}
         disabled={isProcessing}
       >

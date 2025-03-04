@@ -1,5 +1,6 @@
 "use client";
 
+import { PayBlock } from "@/components/PaySwap";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useFetchCategories } from "@/hooks/useFetchCategories";
@@ -20,6 +21,7 @@ export default function GerentePage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">Dashboard de {tienda?.nombre}</h1>
+      <PayBlock />
     </div>
   );
 }
