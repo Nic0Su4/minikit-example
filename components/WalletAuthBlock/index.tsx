@@ -123,7 +123,7 @@ export const WalletAuthBlock: React.FC = () => {
                 }
 
                 if (tiendaData) {
-                  router.push(`/dashboard/tienda`);
+                  router.push(`/dashboard/products`);
                 }
               }
               if (data.rol === "usuario") {
@@ -194,7 +194,7 @@ export const WalletAuthBlock: React.FC = () => {
           }
 
           if (tiendaData) {
-            router.push(`/dashboard/tienda`);
+            router.push(`/dashboard/products`);
           }
         }
         if (data.rol === "usuario") {

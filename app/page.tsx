@@ -31,7 +31,7 @@ export default function LoginPage() {
           }
 
           if (tiendaData) {
-            router.push(`/dashboard/tienda`);
+            router.push(`/dashboard/products`);
           }
         }
       }

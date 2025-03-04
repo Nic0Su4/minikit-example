@@ -64,7 +64,7 @@ export default function CreateStoreForm({ gerenteWallet, categories }: Props) {
 
         await createStoreAction(formData);
 
-        router.push("/dashboard/tienda");
+        router.push("/dashboard/products");
       } catch (error: any) {
         setError(error.message || "Error al crear la tienda");
       }
