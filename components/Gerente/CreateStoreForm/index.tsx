@@ -60,7 +60,7 @@ export default function CreateStoreForm({ gerenteWallet, categories }: Props) {
         if (form.logoFile) {
           formData.append("logoFile", form.logoFile);
         }
-        formData.append("gerente_address", gerenteWallet);
+        formData.append("gerenteId", gerenteWallet);
 
         await createStoreAction(formData);
 
