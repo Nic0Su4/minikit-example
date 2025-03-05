@@ -31,7 +31,7 @@ export const PayBlock = () => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            fromAmount: tokenToDecimals(tokenWLD, Tokens.WLD).toString(),
+            quantity: tokenWLD.toString(),
           }),
         }
       );
@@ -126,7 +126,7 @@ export const PayBlock = () => {
     <div>
       <button
         onClick={() => {
-          sendPayment(0.3);
+          sendPayment(0.1);
         }}
         disabled={isProcessing}
       >
