@@ -1,5 +1,5 @@
 // app/api/binance-swap/route.ts
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
 import crypto from "crypto";
 
@@ -14,7 +14,7 @@ function sign(query: string): string {
     .digest("hex");
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const { fromAmount } = await request.json();
     if (!fromAmount) {
