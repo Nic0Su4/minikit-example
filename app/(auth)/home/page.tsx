@@ -1,6 +1,7 @@
 "use client";
 
 import { useUser } from "@/app/user-context";
+import { PayBlock } from "@/components/PaySwap";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, ShoppingBag, Sparkles, TrendingUp } from "lucide-react";
@@ -89,6 +90,7 @@ export default function HomePage() {
             </CardContent>
           </Card>
         </div>
+        <PayBlock />
       </div>
     </div>
   );
