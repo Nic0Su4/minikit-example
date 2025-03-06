@@ -75,7 +75,6 @@ export default function ProductsPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          Cargando...
         </div>
       </div>
     );
