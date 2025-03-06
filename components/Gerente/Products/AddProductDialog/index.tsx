@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/dialog";
 import { addProduct } from "@/app/dashboard/products/actions";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
 type Product = {
   id: number;
@@ -26,9 +25,13 @@ type Product = {
   imageFile?: File | null;
 };
 
-export function AddProductDialog({ tiendaId }: { tiendaId: number }) {
-  const router = useRouter();
-
+export function AddProductDialog({
+  tiendaId,
+  onProductAdded,
+}: {
+  tiendaId: number;
+  onProductAdded: any;
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [product, setProduct] = useState<Product>({
     id: 0,
@@ -57,6 +60,7 @@ export function AddProductDialog({ tiendaId }: { tiendaId: number }) {
       }
 
       await addProduct(formData);
+      onProductAdded();
       setIsOpen(false);
       setProduct({
         id: 0,
@@ -71,7 +75,6 @@ export function AddProductDialog({ tiendaId }: { tiendaId: number }) {
       console.error("Error al guardar el producto:", error);
     } finally {
       setIsLoading(false);
-      router.refresh();
     }
   };
 
