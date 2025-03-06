@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { addProduct } from "@/app/dashboard/products/actions";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 type Product = {
   id: number;
@@ -26,6 +27,8 @@ type Product = {
 };
 
 export function AddProductDialog({ tiendaId }: { tiendaId: number }) {
+  const router = useRouter();
+
   const [isOpen, setIsOpen] = useState(false);
   const [product, setProduct] = useState<Product>({
     id: 0,
@@ -37,9 +40,11 @@ export function AddProductDialog({ tiendaId }: { tiendaId: number }) {
   });
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const formData = new FormData();
       formData.append("nombre", product.name);
@@ -64,6 +69,9 @@ export function AddProductDialog({ tiendaId }: { tiendaId: number }) {
       setImagePreview(null);
     } catch (error) {
       console.error("Error al guardar el producto:", error);
+    } finally {
+      setIsLoading(false);
+      router.refresh();
     }
   };
 
@@ -189,7 +197,9 @@ export function AddProductDialog({ tiendaId }: { tiendaId: number }) {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">Guardar Producto</Button>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? "Guardando..." : "Guardar Producto"}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>
