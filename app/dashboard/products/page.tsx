@@ -18,26 +18,30 @@ import { MiniKit } from "@worldcoin/minikit-js";
 import { useRouter } from "next/navigation";
 
 import { useCallback, useEffect, useState } from "react";
+import { Loader2 } from "lucide-react";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<any[]>([]);
-  const [tiendaId, setTiendaId] = useState<number>();
+  const [tiendaId, setTiendaId] = useState<number | null>();
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const supabase = createClient();
   const gerenteAddress = MiniKit.walletAddress;
 
-  const fetchProducts = useCallback(async () => {
-    const products = await getProductsByStore(tiendaId!);
+  const fetchProducts = useCallback(async (storeId: number) => {
+    const products = await getProductsByStore(storeId);
     setProducts(products || []);
-  }, [tiendaId]);
+  }, []);
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchData = async () => {
+      // Verifica que exista gerenteAddress
       if (!gerenteAddress) {
         router.push("/");
         return;
       }
 
+      // Verifica el usuario
       const { data: user } = await supabase
         .from("usuarios")
         .select("*")
@@ -48,22 +52,32 @@ export default function ProductsPage() {
         router.push("/home");
         return;
       }
-    };
 
-    const fetchTienda = async () => {
+      // Obtén la tienda
       const { data: tienda } = await supabase
         .from("tiendas")
         .select("*")
         .eq("gerente_address", gerenteAddress!)
         .single();
 
-      setTiendaId(tienda?.id);
+      if (tienda?.id) {
+        setTiendaId(tienda.id);
+        await fetchProducts(tienda.id);
+      }
+      setIsLoading(false);
     };
 
-    fetchUser();
-    fetchTienda();
-    fetchProducts();
-  }, [fetchProducts, router, gerenteAddress, supabase]);
+    fetchData();
+  }, [gerenteAddress, router, supabase, fetchProducts]);
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <div className="text-center">Cargando...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -72,11 +86,13 @@ export default function ProductsPage() {
         {tiendaId && (
           <AddProductDialog
             tiendaId={tiendaId}
-            onProductAdded={fetchProducts}
+            onProductAdded={() => {
+              if (tiendaId) fetchProducts(tiendaId);
+            }}
           />
         )}
       </div>
-      {products?.length === 0 || !products ? (
+      {products.length === 0 ? (
         <div>No hay productos, comienza añadiendo productos</div>
       ) : (
         <Table>
@@ -105,7 +121,9 @@ export default function ProductsPage() {
                     </Link>
                     <DeleteProductButton
                       productId={product.id}
-                      onProductAdded={fetchProducts}
+                      onProductAdded={() => {
+                        if (tiendaId) fetchProducts(tiendaId);
+                      }}
                     />
                   </div>
                 </TableCell>
