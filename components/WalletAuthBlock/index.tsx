@@ -192,7 +192,11 @@ export const WalletAuthBlock: React.FC = () => {
           .eq("wallet_address", MiniKit.walletAddress!)
           .single();
 
-        setUser({ ...MiniKit.user!, rol: user!.rol });
+        if (user && user.rol) {
+          setUser({ ...MiniKit.user!, rol: user.rol });
+        } else {
+          setUser({ ...MiniKit.user!, rol: "usuario" });
+        }
 
         if (data.rol === "gerente") {
           const { data: tiendaData, error: tiendaError } = await supabase
