@@ -39,7 +39,19 @@ export const WalletAuthBlock: React.FC = () => {
           .eq("wallet_address", MiniKit.walletAddress!)
           .single();
 
-        setUser({ ...MiniKit.user, role: user!.rol });
+        if (user) {
+          setUser({ ...MiniKit.user, role: user.rol });
+        } else {
+          const { error } = await supabase.from("usuarios").insert({
+            wallet_address: MiniKit.walletAddress!,
+            username: MiniKit.user.username,
+            rol: "usuario",
+          });
+          if (error) {
+            console.error("Error al crear el usuario:", error);
+          }
+          setUser({ ...MiniKit.user, role: "usuario" });
+        }
       }
     }
     fetchData();
