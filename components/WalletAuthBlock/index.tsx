@@ -101,7 +101,7 @@ export const WalletAuthBlock: React.FC = () => {
             setUser({ ...MiniKit.user, role: data!.rol });
 
             if (!data) {
-              const { error } = await supabase.from("usuarios").upsert({
+              const { error } = await supabase.from("usuarios").insert({
                 wallet_address: MiniKit.walletAddress!,
                 username: MiniKit.user.username,
                 rol: "usuario",
