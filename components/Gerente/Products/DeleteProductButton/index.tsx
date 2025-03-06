@@ -13,18 +13,26 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { deleteProduct } from "@/app/dashboard/products/actions";
 
 export default function DeleteProductButton({
   productId,
+  onProductAdded,
 }: {
   productId: number;
+  onProductAdded: any;
 }) {
   const [isOpen, setIsOpen] = useState(false);
-
-  const handleDelete = () => {
-    // Aquí iría la lógica para eliminar el producto
-    console.log("Producto eliminado:", productId);
-    setIsOpen(false);
+  const handleDelete = async () => {
+    try {
+      await deleteProduct(productId);
+      console.log("Producto eliminado:", productId);
+      onProductAdded();
+    } catch (error) {
+      console.error("Error al eliminar el producto:", error);
+    } finally {
+      setIsOpen(false);
+    }
   };
 
   return (

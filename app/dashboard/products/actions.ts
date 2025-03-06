@@ -77,3 +77,24 @@ export const addProduct = async (formData: FormData) => {
   revalidatePath("/dashboard/products");
   return addedProduct;
 };
+
+/**
+ * Elimina un producto de la base de datos.
+ * @param productId El ID del producto a eliminar.
+ * @returns Resultado de la eliminación.
+ */
+export const deleteProduct = async (productId: number) => {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("productos")
+    .delete()
+    .eq("id", productId);
+
+  if (error) {
+    throw new Error("Error al eliminar el producto: " + error.message);
+  }
+
+  revalidatePath("/dashboard/products");
+  return data;
+};

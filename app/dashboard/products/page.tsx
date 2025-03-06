@@ -23,48 +23,57 @@ export default function ProductsPage() {
   const [products, setProducts] = useState<any[]>([]);
   const [tiendaId, setTiendaId] = useState<number>();
   const router = useRouter();
+  const supabase = createClient();
+  const gerenteAddress = MiniKit.walletAddress;
 
-  const fetchData = useCallback(async () => {
-    const supabase = createClient();
-    const gerenteAddress = MiniKit.walletAddress;
-
-    if (!gerenteAddress) {
-      router.push("/");
-      return;
-    }
-
-    const { data: user } = await supabase
-      .from("usuarios")
-      .select("*")
-      .eq("wallet_address", gerenteAddress)
-      .single();
-
-    if (user?.rol === "usuario") {
-      router.push("/home");
-      return;
-    }
-
-    const { data: tienda } = await supabase
-      .from("tiendas")
-      .select("*")
-      .eq("gerente_address", gerenteAddress)
-      .single();
-
-    const products = await getProductsByStore(tienda!.id);
+  const fetchProducts = useCallback(async () => {
+    const products = await getProductsByStore(tiendaId!);
     setProducts(products || []);
-    setTiendaId(tienda!.id);
-  }, [router]);
+  }, [tiendaId]);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    const fetchUser = async () => {
+      if (!gerenteAddress) {
+        router.push("/");
+        return;
+      }
+
+      const { data: user } = await supabase
+        .from("usuarios")
+        .select("*")
+        .eq("wallet_address", gerenteAddress)
+        .single();
+
+      if (user?.rol === "usuario") {
+        router.push("/home");
+        return;
+      }
+    };
+
+    const fetchTienda = async () => {
+      const { data: tienda } = await supabase
+        .from("tiendas")
+        .select("*")
+        .eq("gerente_address", gerenteAddress!)
+        .single();
+
+      setTiendaId(tienda?.id);
+    };
+
+    fetchUser();
+    fetchTienda();
+    fetchProducts();
+  }, [fetchProducts, router, gerenteAddress, supabase]);
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Productos</h1>
         {tiendaId && (
-          <AddProductDialog tiendaId={tiendaId} onProductAdded={fetchData} />
+          <AddProductDialog
+            tiendaId={tiendaId}
+            onProductAdded={fetchProducts}
+          />
         )}
       </div>
       {products?.length === 0 || !products ? (
@@ -94,7 +103,10 @@ export default function ProductsPage() {
                         Editar
                       </Button>
                     </Link>
-                    <DeleteProductButton productId={product.id} />
+                    <DeleteProductButton
+                      productId={product.id}
+                      onProductAdded={fetchProducts}
+                    />
                   </div>
                 </TableCell>
               </TableRow>
