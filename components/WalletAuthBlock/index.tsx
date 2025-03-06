@@ -40,7 +40,7 @@ export const WalletAuthBlock: React.FC = () => {
           .single();
 
         if (user) {
-          setUser({ ...MiniKit.user, role: user.rol });
+          setUser({ ...MiniKit.user, rol: user.rol });
         } else {
           const { error } = await supabase.from("usuarios").insert({
             wallet_address: MiniKit.walletAddress!,
@@ -50,7 +50,7 @@ export const WalletAuthBlock: React.FC = () => {
           if (error) {
             console.error("Error al crear el usuario:", error);
           }
-          setUser({ ...MiniKit.user, role: "usuario" });
+          setUser({ ...MiniKit.user, rol: "usuario" });
         }
       }
     }
@@ -110,7 +110,7 @@ export const WalletAuthBlock: React.FC = () => {
               .eq("wallet_address", MiniKit.walletAddress!)
               .single();
 
-            setUser({ ...MiniKit.user, role: data!.rol });
+            setUser({ ...MiniKit.user, rol: data!.rol });
 
             if (!data) {
               const { error } = await supabase.from("usuarios").insert({
@@ -192,7 +192,7 @@ export const WalletAuthBlock: React.FC = () => {
           .eq("wallet_address", MiniKit.walletAddress!)
           .single();
 
-        setUser({ ...MiniKit.user!, role: user!.rol });
+        setUser({ ...MiniKit.user!, rol: user!.rol });
 
         if (data.rol === "gerente") {
           const { data: tiendaData, error: tiendaError } = await supabase

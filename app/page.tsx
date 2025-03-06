@@ -16,10 +16,10 @@ export default function LoginPage() {
   useEffect(() => {
     async function fetchData() {
       if (user) {
-        if (user.role === "usuario") {
+        if (user.rol === "usuario") {
           router.push("/home");
         }
-        if (user.role === "gerente") {
+        if (user.rol === "gerente") {
           const { data: tiendaData, error: tiendaError } = await supabase
             .from("tiendas")
             .select("*")

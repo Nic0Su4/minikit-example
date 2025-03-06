@@ -16,7 +16,7 @@ type WorldAppUser = {
   username: string | null;
   profilePictureUrl: string | null;
   walletAddress: string | null;
-  role: string | null;
+  rol: string | null;
 };
 
 interface UserContextType {
@@ -47,7 +47,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
             .select("*")
             .eq("wallet_address", MiniKit.walletAddress)
             .single();
-          setUser({ role: userDb!.rol, ...MiniKit.user });
+          setUser({ rol: userDb!.rol, ...MiniKit.user });
         }
       } catch (error) {
         console.error("Error checking auth status:", error);
