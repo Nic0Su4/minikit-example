@@ -9,7 +9,7 @@ import Image from "next/image";
 import {
   getProductById,
   updateProduct,
-} from "@/app/dashboard/products/actions";
+} from "@/app/dashboard/(auth)/products/actions";
 
 type EditProduct = {
   id: number;

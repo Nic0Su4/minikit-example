@@ -13,7 +13,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { deleteProduct } from "@/app/dashboard/products/actions";
+import { deleteProduct } from "@/app/dashboard/(auth)/products/actions";
 
 export default function DeleteProductButton({
   productId,

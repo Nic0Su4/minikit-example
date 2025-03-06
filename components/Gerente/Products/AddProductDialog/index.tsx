@@ -13,7 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { addProduct } from "@/app/dashboard/products/actions";
+import { addProduct } from "@/app/dashboard/(auth)/products/actions";
 import Image from "next/image";
 
 type Product = {
