@@ -39,7 +39,7 @@ export const WalletAuthBlock: React.FC = () => {
           .eq("wallet_address", MiniKit.walletAddress!)
           .single();
 
-        if (user) {
+        if (user && user.rol) {
           setUser({ ...MiniKit.user, rol: user.rol });
         } else {
           const { error } = await supabase.from("usuarios").insert({
