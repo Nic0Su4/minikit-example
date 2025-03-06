@@ -73,8 +73,10 @@ export default function ProductsPage() {
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <div className="text-center">Cargando...</div>
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          Cargando...
+        </div>
       </div>
     );
   }
