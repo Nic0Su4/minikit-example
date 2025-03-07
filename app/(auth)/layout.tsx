@@ -20,9 +20,6 @@ export default function AuthLayout({
     if (!isLoading && !user) {
       router.push("/");
     }
-    if (user?.rol === "gerente") {
-      router.push("/dashboard/products");
-    }
   }, [user, isLoading, router]);
 
   if (isLoading) {
