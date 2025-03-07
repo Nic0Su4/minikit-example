@@ -240,33 +240,6 @@ export default function MarketplacePage() {
           </div>
         )}
       </div>
-
-      {/* Navegación inferior */}
-      <nav className="sticky bottom-0 bg-background border-t p-2">
-        <div className="flex justify-around max-w-md mx-auto">
-          <Button
-            variant="ghost"
-            className="flex flex-col items-center h-auto py-2"
-          >
-            <ShoppingBag className="h-5 w-5" />
-            <span className="text-xs mt-1">Productos</span>
-          </Button>
-          <Button
-            variant="ghost"
-            className="flex flex-col items-center h-auto py-2"
-          >
-            <Search className="h-5 w-5" />
-            <span className="text-xs mt-1">Buscar</span>
-          </Button>
-          <Button
-            variant="ghost"
-            className="flex flex-col items-center h-auto py-2"
-          >
-            <Tag className="h-5 w-5" />
-            <span className="text-xs mt-1">Mis Compras</span>
-          </Button>
-        </div>
-      </nav>
     </div>
   );
 }
