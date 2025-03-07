@@ -4,12 +4,58 @@ import { useUser } from "@/app/user-context";
 import { PayBlock } from "@/components/PaySwap";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { createClient } from "@/utils/supabase/client";
 import { Loader2, ShoppingBag, Sparkles, TrendingUp } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function HomePage() {
   const { user, isLoading } = useUser();
   const router = useRouter();
+  const [categories, setCategories] = useState<
+    { id: number; nombre: string; icono: string | null }[] | null
+  >([]);
+  const [categoriesImages, setCategoriesImages] = useState<
+    {
+      name: string;
+      href: string;
+      icon: string | null;
+    }[]
+  >();
+
+  useEffect(() => {
+    if (!user) {
+      router.push("/");
+    }
+    if (user?.rol === "gerente") {
+      router.push("/dashboard/products");
+    }
+
+    const fetchData = async () => {
+      const supabase = createClient();
+
+      const { data: categories } = await supabase
+        .from("tipos_tiendas")
+        .select("*");
+
+      setCategories(categories || []);
+    };
+
+    fetchData();
+
+    setCategoriesImages(() => {
+      return (
+        categories?.map((category) => {
+          return {
+            name: category.nombre,
+            href: `/category/${category.id}`,
+            icon: category.icono,
+          };
+        }) || []
+      );
+    });
+  }, [router, user, categories]);
 
   if (isLoading) {
     return (
@@ -69,28 +115,21 @@ export default function HomePage() {
 
         {/* Estadísticas */}
         <div className="grid grid-cols-2 gap-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Productos</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">150+</p>
-              <p className="text-xs text-muted-foreground">
-                Productos disponibles
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Usuarios</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">50+</p>
-              <p className="text-xs text-muted-foreground">Usuarios activos</p>
-            </CardContent>
-          </Card>
+          {categoriesImages!.map((category) => (
+            <Link key={category.name} href={category.href}>
+              <Card className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <CardTitle className="text-center text-4xl">
+                    {category.icon}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-center text-sm">{category.name}</p>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
         </div>
-        <PayBlock />
       </div>
     </div>
   );
