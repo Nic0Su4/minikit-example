@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { createClient } from "@/utils/supabase/server";
+import Image from "next/image";
 
 export default async function CategoryPage({
   params,
@@ -32,7 +33,17 @@ export default async function CategoryPage({
                   <CardTitle>{store.nombre}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p>{store.direccion}</p>
+                  <div className="flex justify-between">
+                    <p>{store.direccion}</p>
+                    <div>
+                      <Image
+                        src={store.logo_url || ""}
+                        alt="Logo tienda"
+                        height={10}
+                        width={10}
+                      />
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </Link>
