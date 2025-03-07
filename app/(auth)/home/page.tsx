@@ -41,7 +41,7 @@ export default function HomePage() {
         categories?.map((category) => {
           return {
             name: category.nombre,
-            href: `/category/${category.id}`,
+            href: `/home/category/${category.id}`,
             icon: category.icono,
           };
         }) || []
