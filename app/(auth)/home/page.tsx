@@ -107,20 +107,24 @@ export default function HomePage() {
 
         {/* Estadísticas */}
         <div className="grid grid-cols-2 gap-4">
-          {categoriesImages!.map((category) => (
-            <Link key={category.name} href={category.href}>
-              <Card className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="text-center text-4xl">
-                    {category.icon}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-center text-sm">{category.name}</p>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
+          {categoriesImages ? (
+            categoriesImages.map((category) => (
+              <Link key={category.name} href={category.href}>
+                <Card className="hover:shadow-lg transition-shadow">
+                  <CardHeader>
+                    <CardTitle className="text-center text-4xl">
+                      {category.icon}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-center text-sm">{category.name}</p>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))
+          ) : (
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          )}
         </div>
       </div>
     </div>
