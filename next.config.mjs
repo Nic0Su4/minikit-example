@@ -5,6 +5,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: process.env.NEXT_PUBLIC_SUPABASE_URL
+      },
+      {
+        protocol: "https",
+        hostname: "https://kbswiwnnsqgxhcdzrfvt.supabase.co/"
       }
     ]
   }
