@@ -4,6 +4,7 @@ import { ChangeEvent, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { createStoreAction } from "@/app/dashboard/create-store/actions";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   gerenteWallet: string;
@@ -146,13 +147,9 @@ export default function CreateStoreForm({ gerenteWallet, categories }: Props) {
         )}
       </div>
       {error && <p className="text-red-500">{error}</p>}
-      <button
-        type="submit"
-        disabled={isPending}
-        className="px-6 py-2 bg-blue-600 text-white rounded"
-      >
+      <Button type="submit" disabled={isPending}>
         {isPending ? "Creando..." : "Crear Tienda"}
-      </button>
+      </Button>
     </form>
   );
 }
