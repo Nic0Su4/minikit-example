@@ -1,7 +1,6 @@
 "use client";
 
 import { useUser } from "@/app/user-context";
-import { PayBlock } from "@/components/PaySwap";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { createClient } from "@/utils/supabase/client";
@@ -25,13 +24,6 @@ export default function HomePage() {
   >();
 
   useEffect(() => {
-    if (!user) {
-      router.push("/");
-    }
-    if (user?.rol === "gerente") {
-      router.push("/dashboard/products");
-    }
-
     const fetchData = async () => {
       const supabase = createClient();
 
