@@ -5,9 +5,8 @@ const COLLECTION = {
   CATEGORY: "category",
   STORE: "store",
   ITEM: "item",
-  SPECIFICATION: "specification",
-  INSTRUCTION: "instruction",
   OFFER: "offer",
+  COMMISSIONSCLIENT: "commissionsClient",
 };
 
 export default COLLECTION;
