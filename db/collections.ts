@@ -1,4 +1,4 @@
-const COLLECTION = {
+const COLLECTIONS = {
   CLIENT: "client",
   BUY: "buy",
   PAYMENT: "payment",
@@ -9,4 +9,4 @@ const COLLECTION = {
   COMMISSIONSCLIENT: "commissionsClient",
 };
 
-export default COLLECTION;
+export default COLLECTIONS;
