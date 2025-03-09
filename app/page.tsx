@@ -5,39 +5,17 @@ import { useUser } from "./user-context";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { createClient } from "@/utils/supabase/client";
 import { MiniKit } from "@worldcoin/minikit-js";
 
 export default function LoginPage() {
   const { user, isLoading } = useUser();
   const router = useRouter();
-  const supabase = createClient();
 
   useEffect(() => {
-    async function fetchData() {
-      if (user) {
-        if (user.rol === "usuario") {
-          router.push("/home");
-        }
-        if (user.rol === "gerente") {
-          const { data: tiendaData, error: tiendaError } = await supabase
-            .from("tiendas")
-            .select("*")
-            .eq("gerente_address", MiniKit.walletAddress!)
-            .single();
-
-          if (tiendaError) {
-            router.push(`/dashboard/create-store`);
-          }
-
-          if (tiendaData) {
-            router.push(`/dashboard/products`);
-          }
-        }
-      }
+    if (user) {
+      router.push("/home");
     }
-    fetchData();
-  }, [user, router, supabase]);
+  }, [user, router]);
 
   if (isLoading) {
     return (

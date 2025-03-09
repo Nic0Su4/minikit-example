@@ -19,43 +19,38 @@ import {
 import { Alert, AlertTitle, AlertDescription } from "../ui/alert";
 import { Button } from "../ui/button";
 import { Loader2, XCircle, Wallet } from "lucide-react";
-import { createClient } from "@/utils/supabase/client";
+import { getClientByWallet, setClient } from "@/db/client";
 
 export const WalletAuthBlock: React.FC = () => {
-  const supabase = createClient();
   const [status, setStatus] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { setUser } = useUser();
-
   const router = useRouter();
 
   useEffect(() => {
     async function fetchData() {
-      if (MiniKit.isInstalled() && MiniKit.user && MiniKit.user.username) {
-        const { data: user } = await supabase
-          .from("usuarios")
-          .select("*")
-          .eq("wallet_address", MiniKit.walletAddress!)
-          .single();
-
-        if (user && user.rol) {
-          setUser({ ...MiniKit.user, rol: user.rol });
+      if (
+        MiniKit.isInstalled() &&
+        MiniKit.user &&
+        MiniKit.user.username &&
+        MiniKit.walletAddress
+      ) {
+        const client = await getClientByWallet(MiniKit.walletAddress);
+        if (client) {
+          setUser(MiniKit.user);
         } else {
-          const { error } = await supabase.from("usuarios").insert({
-            wallet_address: MiniKit.walletAddress!,
+          const newClient = {
             username: MiniKit.user.username,
-            rol: "usuario",
-          });
-          if (error) {
-            console.error("Error al crear el usuario:", error);
-          }
-          setUser({ ...MiniKit.user, rol: "usuario" });
+            wallet: MiniKit.walletAddress,
+          };
+          await setClient(newClient, MiniKit.walletAddress);
+          setUser(MiniKit.user);
         }
       }
     }
     fetchData();
-  }, [setUser, router, supabase]);
+  }, [setUser]);
 
   const signInWithWallet = async () => {
     try {
@@ -100,49 +95,22 @@ export const WalletAuthBlock: React.FC = () => {
         let attempts = 0;
         const intervalId = setInterval(async () => {
           attempts++;
-          if (MiniKit.user && MiniKit.user.username) {
+          if (MiniKit.user && MiniKit.user.username && MiniKit.walletAddress) {
             console.log("User data:", MiniKit.user);
             clearInterval(intervalId);
 
-            const { data, error } = await supabase
-              .from("usuarios")
-              .select("*")
-              .eq("wallet_address", MiniKit.walletAddress!)
-              .single();
-
-            if (error) {
-              const { error } = await supabase.from("usuarios").upsert({
-                wallet_address: MiniKit.walletAddress!,
+            const client = await getClientByWallet(MiniKit.walletAddress);
+            if (!client) {
+              const newClient = {
                 username: MiniKit.user.username,
-                rol: "usuario",
-              });
-
-              if (error) {
-                console.error("Error al crear el usuario:", error);
-              }
-
-              setUser({ ...MiniKit.user, rol: "usuario" });
+                wallet: MiniKit.walletAddress,
+              };
+              await setClient(newClient, MiniKit.walletAddress);
+              setUser({ ...MiniKit.user, ...newClient });
             } else {
-              setUser({ ...MiniKit.user, rol: data!.rol });
-              if (data.rol === "gerente") {
-                const { data: tiendaData, error: tiendaError } = await supabase
-                  .from("tiendas")
-                  .select("*")
-                  .eq("gerente_address", MiniKit.walletAddress!)
-                  .single();
-
-                if (tiendaError) {
-                  router.push(`/dashboard/create-store`);
-                }
-
-                if (tiendaData) {
-                  router.push(`/dashboard/products`);
-                }
-              }
-              if (data.rol === "usuario") {
-                router.push("/home");
-              }
+              setUser({ ...MiniKit.user, ...client });
             }
+            router.push("/home");
           } else if (attempts >= maxAttempts) {
             clearInterval(intervalId);
             setError(
@@ -163,6 +131,7 @@ export const WalletAuthBlock: React.FC = () => {
           err instanceof Error ? err.message : String(err)
         }`
       );
+      setIsLoading(false);
     }
   };
 
@@ -187,36 +156,7 @@ export const WalletAuthBlock: React.FC = () => {
       const data = await response.json();
       if (data.status === "success" && data.isValid) {
         setStatus("Autenticación verificada exitosamente");
-        const { data: user } = await supabase
-          .from("usuarios")
-          .select("*")
-          .eq("wallet_address", MiniKit.walletAddress!)
-          .single();
-
-        if (user && user.rol) {
-          setUser({ ...MiniKit.user!, rol: user.rol });
-        } else {
-          setUser({ ...MiniKit.user!, rol: "usuario" });
-        }
-
-        if (data.rol === "gerente") {
-          const { data: tiendaData, error: tiendaError } = await supabase
-            .from("tiendas")
-            .select("*")
-            .eq("gerente_address", MiniKit.walletAddress!)
-            .single();
-
-          if (tiendaError) {
-            router.push(`/dashboard/create-store`);
-          }
-
-          if (tiendaData) {
-            router.push(`/dashboard/products`);
-          }
-        }
-        if (data.rol === "usuario") {
-          router.push("/home");
-        }
+        router.push("/home");
       }
     } catch (err) {
       console.error("Error completing SIWE verification:", err);

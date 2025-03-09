@@ -1,5 +1,5 @@
 export interface Client {
-  userName: string;
+  username: string;
   wallet: string;
 }
 
