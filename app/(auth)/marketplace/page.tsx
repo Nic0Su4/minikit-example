@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, ShoppingBag, Tag, Search, ArrowLeft } from "lucide-react";
+import { Loader2, ShoppingBag, Tag, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import Image from "next/image";
