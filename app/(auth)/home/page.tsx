@@ -3,51 +3,43 @@
 import { useUser } from "@/app/user-context";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { createClient } from "@/utils/supabase/client";
+import { getCategories } from "@/db/category";
 import { Loader2, ShoppingBag, Sparkles, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+interface CategoryImage {
+  id: string;
+  name: string;
+  href: string;
+  icon: string | null;
+}
+
 export default function HomePage() {
   const { user, isLoading } = useUser();
   const router = useRouter();
-  const [categories, setCategories] = useState<
-    { id: number; nombre: string; icono: string | null }[] | null
-  >([]);
-  const [categoriesImages, setCategoriesImages] = useState<
-    {
-      name: string;
-      href: string;
-      icon: string | null;
-    }[]
-  >();
+  const [categoriesImages, setCategoriesImages] = useState<CategoryImage[]>([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const supabase = createClient();
-
-      const { data: categories } = await supabase
-        .from("tipos_tiendas")
-        .select("*");
-
-      setCategories(categories || []);
+    const fetchCategories = async () => {
+      try {
+        const fetchedCategories = await getCategories();
+        const images = fetchedCategories.map((category: any) => ({
+          id: category.id,
+          name: category.name,
+          href: `/home/category/${category.id}`,
+          // Si no existe un icono, se usa un icono por defecto (Sparkles)
+          icon: category.icon || null,
+        }));
+        setCategoriesImages(images);
+      } catch (error) {
+        console.error("Error fetching categories: ", error);
+      }
     };
 
-    fetchData();
-
-    setCategoriesImages(() => {
-      return (
-        categories?.map((category) => {
-          return {
-            name: category.nombre,
-            href: `/home/category/${category.id}`,
-            icon: category.icono,
-          };
-        }) || []
-      );
-    });
-  }, [router, user, categories]);
+    fetchCategories();
+  }, [router, user]);
 
   if (isLoading) {
     return (
@@ -105,11 +97,10 @@ export default function HomePage() {
           </CardContent>
         </Card>
 
-        {/* Estadísticas */}
         <div className="grid grid-cols-2 gap-4">
-          {categoriesImages ? (
+          {categoriesImages.length > 0 ? (
             categoriesImages.map((category) => (
-              <Link key={category.name} href={category.href}>
+              <Link key={category.id} href={category.href}>
                 <Card className="hover:shadow-lg transition-shadow">
                   <CardHeader>
                     <CardTitle className="text-center text-4xl">
