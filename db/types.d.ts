@@ -83,6 +83,7 @@ export interface Item {
   stock: number;
   instructionId: Instruction;
   status: string;
+  storeId: string;
 }
 
 export type CommissionType = "percentage" | "fixed";
