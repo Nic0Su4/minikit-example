@@ -52,6 +52,7 @@ export interface Contact {
 }
 
 export interface Store {
+  id?;
   name: string;
   local?: Local;
   categoryIds: string[];

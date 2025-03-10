@@ -1,48 +1,46 @@
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { createClient } from "@/utils/supabase/server";
 import Image from "next/image";
+import { getCategoryById } from "@/db/category";
+import { getItemsByCategory } from "@/db/item";
+import { getStoreById } from "@/db/store";
+import { Store } from "@/db/types";
 
 export default async function CategoryPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const supabase = await createClient();
+  const category = await getCategoryById(params.id);
 
-  const { data: category } = await supabase
-    .from("tipos_tiendas")
-    .select("*")
-    .eq("id", +params.id)
-    .single();
+  const items = await getItemsByCategory(params.id);
 
-  const { data: stores } = await supabase
-    .from("tiendas")
-    .select("*")
-    .eq("tipo_id", +params.id);
+  const storeIds = Array.from(new Set(items.map((item) => item.storeId)));
 
-  console.log(stores);
+  const stores = await Promise.all(storeIds.map((id) => getStoreById(id)));
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">{category?.nombre}</h1>
+      <h1 className="text-3xl font-bold mb-8">{category.name}</h1>
       <div className="grid grid-cols-1 gap-4">
-        {stores ? (
-          stores.map((store) => (
+        {stores.length > 0 ? (
+          stores.map((store: Store) => (
             <Link key={store.id} href={`/store/${store.id}`}>
               <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader>
-                  <CardTitle>{store.nombre}</CardTitle>
+                  <CardTitle>{store.name}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex justify-between">
-                    <p>{store.direccion}</p>
+                    <p>
+                      {store.local?.direction?.direction || "Sin dirección"}
+                    </p>
                     <div>
                       <Image
-                        src={store.logo_url || ""}
+                        src={store.logoImgLink || ""}
                         alt="Logo tienda"
-                        height={10}
-                        width={10}
+                        height={50}
+                        width={50}
                       />
                     </div>
                   </div>
