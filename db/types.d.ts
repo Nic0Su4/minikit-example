@@ -84,7 +84,7 @@ export interface Item {
   altImgLinks?: string[];
   price: number;
   stock: number;
-  instructionId: Instruction;
+  instruction: Instruction;
   status: string;
   storeId: string;
 }
