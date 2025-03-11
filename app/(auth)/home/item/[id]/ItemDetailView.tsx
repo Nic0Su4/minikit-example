@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import type { Item } from "@/db/types";
 import { Minus, Plus } from "lucide-react";
+import { usePayment } from "@/hooks/usePayment";
 
 interface ItemDetailViewProps {
   item: Item;
@@ -16,6 +17,8 @@ export default function ItemDetailView({
   storeName,
 }: ItemDetailViewProps) {
   const [quantity, setQuantity] = useState(1);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const { paymentStatus, processPayment } = usePayment();
 
   const decreaseQuantity = () => {
     if (quantity > 1) {
@@ -35,8 +38,17 @@ export default function ItemDetailView({
   };
 
   const buyNow = () => {
-    // Implementar lógica para comprar ahora
-    console.log(`Comprando ${quantity} unidades de ${item.name}`);
+    setShowPaymentModal(true);
+  };
+
+  const handlePayment = () => {
+    const wldAmount = 0.1;
+    const description = `Compra de ${quantity} unidad(es) de ${item.name}`;
+
+    processPayment(wldAmount, description, () => {
+      console.log("Pago completado con éxito");
+      setShowPaymentModal(false);
+    });
   };
 
   return (
