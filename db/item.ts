@@ -79,6 +79,20 @@ const getItemByExternalId = async (
   return dataToItemDB(doc.data(), doc.id);
 };
 
+const getItemsByStore = async (storeId: string): Promise<Item[]> => {
+  const itemsCollection = collection(db, COLLECTIONS.ITEM);
+  const storeQuery = query(itemsCollection, where("storeId", "==", storeId));
+
+  const snapshot = await getDocs(storeQuery);
+
+  const items: Item[] = [];
+  snapshot.forEach((doc) => {
+    items.push(dataToItemDB(doc.data(), doc.id));
+  });
+
+  return items;
+};
+
 const getItems = async (): Promise<Item[]> => {
   const itemsCollection = collection(db, COLLECTIONS.ITEM);
   const snapshot = await getDocs(itemsCollection);
@@ -96,5 +110,6 @@ export {
   getItemsByCategory,
   getItemsByStatus,
   getItemByExternalId,
+  getItemsByStore,
   getItems,
 };

@@ -74,6 +74,7 @@ export interface Instruction {
 }
 
 export interface Item {
+  id: string;
   name: string;
   description?: string;
   categoryId: string;
