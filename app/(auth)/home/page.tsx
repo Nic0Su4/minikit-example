@@ -51,11 +51,9 @@ export default function HomePage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
-      <TopBar />
-
+    <>
       <div className="flex-1 p-4 max-w-md mx-auto w-full space-y-6">
-        <h2 className="text-lg font-bold">Categorías</h2>
+        <h2 className="text-2xl font-bold">Categorías</h2>
         <div className="grid grid-cols-1 gap-4">
           {categoriesImages.length > 0 ? (
             categoriesImages.map((category) => (
@@ -77,6 +75,6 @@ export default function HomePage() {
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 }

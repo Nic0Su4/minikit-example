@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { BottomNav } from "@/components/BottomNav";
 import { Loader2 } from "lucide-react";
+import { TopBar } from "../../components/TopBar/index";
 
 export default function AuthLayout({
   children,
@@ -36,7 +37,10 @@ export default function AuthLayout({
 
   return (
     <>
-      <main className="pb-16">{children}</main>
+      <div className="flex flex-col min-h-screen bg-background">
+        <TopBar />
+        <main className="pb-16">{children}</main>
+      </div>
       <BottomNav />
     </>
   );
