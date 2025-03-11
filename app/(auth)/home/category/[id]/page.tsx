@@ -2,9 +2,8 @@ import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import { getCategoryById } from "@/db/category";
-import { getItemsByCategory } from "@/db/item";
-import { getStoreById } from "@/db/store";
 import { Store } from "@/db/types";
+import { getStoresByCategory } from "@/db/store";
 
 export default async function CategoryPage({
   params,
@@ -13,11 +12,7 @@ export default async function CategoryPage({
 }) {
   const category = await getCategoryById(params.id);
 
-  const items = await getItemsByCategory(params.id);
-
-  const storeIds = Array.from(new Set(items.map((item) => item.storeId)));
-
-  const stores = await Promise.all(storeIds.map((id) => getStoreById(id)));
+  const stores = await getStoresByCategory(category.id);
 
   return (
     <div className="container mx-auto px-4 py-8">

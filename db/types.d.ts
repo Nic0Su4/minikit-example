@@ -30,6 +30,7 @@ export interface Payment {
 export type CategoryType = "product" | "service";
 
 export interface Category {
+  id: string;
   name: string;
   type: CategoryType;
 }
