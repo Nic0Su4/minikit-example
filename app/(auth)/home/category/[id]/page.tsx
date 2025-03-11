@@ -20,7 +20,7 @@ export default async function CategoryPage({
       <div className="grid grid-cols-1 gap-4">
         {stores.length > 0 ? (
           stores.map((store: Store) => (
-            <Link key={store.id} href={`/store/${store.id}`}>
+            <Link key={store.id} href={`/home/store/${store.id}`}>
               <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <CardTitle>{store.name}</CardTitle>
