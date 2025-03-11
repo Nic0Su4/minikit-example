@@ -1,26 +1,25 @@
-"use client";
-
+import Image from "next/image";
 import Link from "next/link";
-import { Menu, ShoppingCart, Store } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ShoppingCart, Menu, Store } from "lucide-react";
 
 export function TopBar() {
   return (
-    <header className="sticky top-0 z-50 flex h-14 w-full items-center justify-between border-b bg-white px-4">
-      <div className="flex items-center gap-2">
-        <Link href="/home" className="font-medium">
-          <Store className="h-5 w-5" />
-          KipiMarketplace
+    <div className="flex justify-between items-center p-4 border-b">
+      <Link href="/home" className="flex items-center">
+        <Store className="h-6 w-6" />
+        <span className="ml-2 font-semibold">KipiMarketplace</span>
+      </Link>
+      <div className="flex items-center">
+        <Link href="/cart" className="relative">
+          <ShoppingCart className="h-6 w-6" />
+          <span className="absolute -top-2 -right-2 bg-primary text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
+            0
+          </span>
         </Link>
+        <button className="ml-4">
+          <Menu className="h-6 w-6" />
+        </button>
       </div>
-      <div className="flex items-center gap-2">
-        <Button variant="ghost" size="icon" aria-label="Buscar">
-          <ShoppingCart className="h-5 w-5" />
-        </Button>
-        <Button variant="ghost" size="icon" aria-label="Menú">
-          <Menu className="h-5 w-5" />
-        </Button>
-      </div>
-    </header>
+    </div>
   );
 }

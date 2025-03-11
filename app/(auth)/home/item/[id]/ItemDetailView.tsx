@@ -41,32 +41,6 @@ export default function ItemDetailView({
 
   return (
     <div className="flex flex-col max-w-md mx-auto">
-      {/* Header */}
-      <div className="flex justify-between items-center p-4 border-b">
-        <div className="flex items-center">
-          <Image
-            src="/placeholder.svg?height=24&width=24"
-            alt="KipiMarketplace"
-            width={24}
-            height={24}
-          />
-          <span className="ml-2 font-semibold">KipiMarketplace</span>
-        </div>
-        <div className="flex items-center">
-          <div className="relative">
-            <ShoppingCart className="h-6 w-6" />
-            <span className="absolute -top-2 -right-2 bg-primary text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
-              0
-            </span>
-          </div>
-          <button className="ml-4">
-            <div className="w-6 h-0.5 bg-black mb-1"></div>
-            <div className="w-6 h-0.5 bg-black mb-1"></div>
-            <div className="w-6 h-0.5 bg-black"></div>
-          </button>
-        </div>
-      </div>
-
       {/* Product Image */}
       <div className="w-full aspect-square bg-gray-200 relative">
         <Image
