@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, ShoppingBag, User } from "lucide-react";
+import { ClipboardList, Home, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -12,9 +12,9 @@ const bottomNavItems = [
     icon: Home,
   },
   {
-    name: "Marketplace",
-    href: "/marketplace",
-    icon: ShoppingBag,
+    name: "Pedidos",
+    href: "/orders",
+    icon: ClipboardList,
   },
   {
     name: "Perfil",
