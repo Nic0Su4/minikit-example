@@ -55,7 +55,8 @@ export default function HomePage() {
       <TopBar />
 
       <div className="flex-1 p-4 max-w-md mx-auto w-full space-y-6">
-        <div className="grid grid-cols-2 gap-4">
+        <h2 className="text-lg font-bold">Categorías</h2>
+        <div className="grid grid-cols-1 gap-4">
           {categoriesImages.length > 0 ? (
             categoriesImages.map((category) => (
               <Link key={category.id} href={category.href}>
