@@ -23,8 +23,10 @@ const dataToPaymentDB = (data: any, id: string): Payment => {
   };
 };
 
-const setPayment = async (payment: Payment, id: string): Promise<void> => {
-  const paymentRef = doc(collection(db, COLLECTIONS.PAYMENT), id);
+const setPayment = async (payment: Payment, id?: string): Promise<void> => {
+  const paymentRef = id
+    ? doc(db, COLLECTIONS.PAYMENT, id)
+    : doc(collection(db, COLLECTIONS.PAYMENT));
   await setDoc(paymentRef, payment);
 };
 
