@@ -25,13 +25,16 @@ export default async function StorePage({
               <Link key={item.id} href={`/home/item/${item.id}`}>
                 <Card className="hover:shadow-lg transition-shadow">
                   <CardContent>
-                    <div className="flex justify-between">
-                      <Image src={item.imageImgLink || ""} alt={item.name} />
+                    <div className="flex flex-col justify-between">
+                      <Image
+                        src={item.imageImgLink || ""}
+                        alt={item.name}
+                        width={50}
+                        height={50}
+                      />
                       <div>
                         <p>{item.name}</p>
-                        <p>{item.price}</p>
-                        <p>{item.stock}</p>
-                        <p>{item.description}</p>
+                        <p>S/.{item.price}</p>
                       </div>
                     </div>
                   </CardContent>
