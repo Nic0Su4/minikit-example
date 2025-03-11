@@ -27,7 +27,7 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t h-16 mb-4">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t h-16 pb-4">
       <div className="grid h-full max-w-lg grid-cols-3 mx-auto">
         {bottomNavItems.map((item) => {
           const isActive = pathname.startsWith(item.href);
