@@ -9,6 +9,7 @@ import { usePayment } from "@/hooks/usePayment";
 import { useUser } from "../../../../user-context";
 import { useRouter } from "next/navigation";
 import { PaymentModal } from "./PaymentModal";
+import { convertPENtoWLD } from "@/lib/currency/exchange.service";
 
 interface ItemDetailViewProps {
   item: Item;
@@ -21,9 +22,32 @@ export default function ItemDetailView({
 }: ItemDetailViewProps) {
   const [quantity, setQuantity] = useState(1);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [wldAmount, setWldAmount] = useState<number | null>(null);
+  const [isLoadingRate, setIsLoadingRate] = useState(false);
   const { paymentStatus, processPayment } = usePayment();
   const { user } = useUser();
   const router = useRouter();
+
+  useEffect(() => {
+    const calculateWLDAmount = async () => {
+      if (item && quantity > 0) {
+        setIsLoadingRate(true);
+        try {
+          // Calcular el monto total en PEN
+          const totalPEN = item.price * quantity;
+          // Convertir a WLD
+          const amountInWLD = await convertPENtoWLD(totalPEN);
+          setWldAmount(amountInWLD);
+        } catch (error) {
+          console.error("Error al calcular el monto en WLD:", error);
+        } finally {
+          setIsLoadingRate(false);
+        }
+      }
+    };
+
+    calculateWLDAmount();
+  }, [item, quantity]);
 
   useEffect(() => {
     if (!user) {
@@ -53,10 +77,13 @@ export default function ItemDetailView({
   };
 
   const handlePayment = () => {
-    const wldAmount = 0.1;
+    if (!wldAmount || !user?.walletAddress) {
+      console.error("No se puede procesar el pago: falta información");
+      return;
+    }
+
     const description = `Compra de ${quantity} unidad(es) de ${item.name}`;
 
-    // Preparar los items para la compra
     const purchaseItems = [
       {
         item,
@@ -66,7 +93,7 @@ export default function ItemDetailView({
     ];
 
     processPayment(
-      user!.walletAddress!, // ID del cliente
+      user!.walletAddress!,
       wldAmount,
       description,
       purchaseItems,
@@ -97,6 +124,12 @@ export default function ItemDetailView({
         </p>
 
         <div className="text-2xl font-bold">S/{item.price.toFixed(2)}</div>
+
+        {wldAmount !== null && (
+          <div className="text-sm text-gray-600">
+            Equivalente a {wldAmount.toFixed(6)} WLD
+          </div>
+        )}
 
         <div>
           <p className="text-sm text-gray-600 mb-2">Cantidad</p>
@@ -173,16 +206,18 @@ export default function ItemDetailView({
             variant="outline"
             className="w-full border-black text-black hover:bg-gray-100"
             onClick={buyNow}
+            disabled={isLoadingRate || wldAmount === null}
           >
-            Comprar ahora
+            {isLoadingRate ? "Calculando..." : "Comprar ahora"}
           </Button>
         </div>
       </div>
 
-      {showPaymentModal && (
+      {showPaymentModal && wldAmount !== null && (
         <PaymentModal
           item={item}
           quantity={quantity}
+          wldAmount={wldAmount}
           onClose={() => setShowPaymentModal(false)}
           onPay={handlePayment}
           paymentStatus={paymentStatus}

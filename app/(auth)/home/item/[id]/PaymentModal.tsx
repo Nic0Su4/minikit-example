@@ -4,10 +4,12 @@ import type { Item } from "@/db/types";
 import { Button } from "@/components/ui/button";
 import { X, Loader2 } from "lucide-react";
 import type { PaymentStatus } from "@/lib/payment/payment.service";
+import Image from "next/image";
 
 interface PaymentModalProps {
   item: Item;
   quantity: number;
+  wldAmount: number;
   onClose: () => void;
   onPay: () => void;
   paymentStatus: PaymentStatus;
@@ -16,6 +18,7 @@ interface PaymentModalProps {
 export function PaymentModal({
   item,
   quantity,
+  wldAmount,
   onClose,
   onPay,
   paymentStatus,
@@ -34,7 +37,14 @@ export function PaymentModal({
 
         <div className="p-4 space-y-4">
           <div className="flex items-start gap-3">
-            <div className="w-16 h-16 bg-gray-200 rounded-md flex-shrink-0"></div>
+            <div className="w-16 h-16 bg-gray-200 rounded-md flex-shrink-0 relative overflow-hidden">
+              <Image
+                src={item.imageImgLink || "/placeholder.svg?height=64&width=64"}
+                alt={item.name}
+                fill
+                className="object-cover"
+              />
+            </div>
             <div>
               <h3 className="font-medium">{item.name}</h3>
               <p className="text-sm text-gray-600">Cantidad: {quantity}</p>
@@ -44,9 +54,16 @@ export function PaymentModal({
 
           <div className="border-t pt-4">
             <h3 className="font-medium mb-2">Método de pago</h3>
-            <div className="flex items-center gap-2 p-2 border rounded-md">
-              <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
-              <span>Pago con WorldCoin (WLD)</span>
+            <div className="flex items-center gap-2 p-3 border rounded-md">
+              <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                <span className="text-xs font-bold">WLD</span>
+              </div>
+              <div className="flex-1">
+                <span className="font-medium">Pago con WorldCoin</span>
+                <p className="text-sm text-gray-600">
+                  {wldAmount.toFixed(6)} WLD
+                </p>
+              </div>
             </div>
           </div>
 
