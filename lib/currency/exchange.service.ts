@@ -25,6 +25,8 @@ export async function getExchangeRate(): Promise<{
       }
     );
 
+    console.log(response);
+
     if (!response.ok) {
       throw new Error(`Error al obtener tipo de cambio: ${response.status}`);
     }
