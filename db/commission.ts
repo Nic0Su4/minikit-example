@@ -56,6 +56,23 @@ const getCommissionByAmount = async (
   return null;
 };
 
+const getAllCommissionsByAmount = async (
+  amount: number
+): Promise<CommissionsClient[]> => {
+  const commissionsCollection = collection(db, COLLECTIONS.COMMISSIONSCLIENT);
+  const snapshot = await getDocs(commissionsCollection);
+
+  const applicableCommissions = snapshot.docs
+    .map((doc) => dataToCommissionDB(doc.data(), doc.id))
+    .filter(
+      (commission) =>
+        (commission.minTreshold === null || amount >= commission.minTreshold) &&
+        (commission.maxTreshold === null || amount <= commission.maxTreshold)
+    );
+
+  return applicableCommissions;
+};
+
 const getCommissions = async (): Promise<CommissionsClient[]> => {
   const commissionsCollection = collection(db, COLLECTIONS.COMMISSIONSCLIENT);
   const snapshot = await getDocs(commissionsCollection);
@@ -66,6 +83,17 @@ const getCommissions = async (): Promise<CommissionsClient[]> => {
   });
 
   return commissions;
+};
+
+const calculateCommissionAmount = (
+  price: number,
+  commission: CommissionsClient
+): number => {
+  if (commission.type === "percentage") {
+    return price * (commission.amount / 100);
+  } else {
+    return commission.amount;
+  }
 };
 
 export { getCommissionById, getCommissionByAmount, getCommissions };
