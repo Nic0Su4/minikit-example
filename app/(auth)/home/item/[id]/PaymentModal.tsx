@@ -16,11 +16,19 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface PaymentModalProps {
   item: Item;
   quantity: number;
-  onClose: () => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   onPay: () => void;
   paymentStatus: PaymentStatus;
   exchangeRate: { WLDtoPEN: number; PENtoWLD: number } | null;
@@ -30,7 +38,8 @@ interface PaymentModalProps {
 export function PaymentModal({
   item,
   quantity,
-  onClose,
+  open,
+  onOpenChange,
   onPay,
   paymentStatus,
   exchangeRate,
@@ -42,16 +51,13 @@ export function PaymentModal({
   const totalPriceWLD = exchangeRate ? grandTotal * exchangeRate.PENtoWLD : 0;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 w-screen h-screen">
-      <div className="bg-white rounded-lg max-w-md w-full max-h-[70vh] overflow-y-auto">
-        <div className="flex justify-between items-center p-4 border-b">
-          <h2 className="text-lg font-semibold">Confirmar compra</h2>
-          <button onClick={onClose} disabled={paymentStatus.isProcessing}>
-            <X className="h-5 w-5" />
-          </button>
-        </div>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>Confirmar compra</DialogTitle>
+        </DialogHeader>
 
-        <div className="p-4 space-y-4">
+        <div className="space-y-4">
           <div className="flex items-start gap-3">
             <div className="w-16 h-16 bg-gray-200 rounded-md flex-shrink-0 relative overflow-hidden">
               <Image
@@ -163,9 +169,18 @@ export function PaymentModal({
             </div>
           )}
 
-          <div className="pt-2">
+          <div className="pt-2 flex gap-2">
+            <DialogClose asChild>
+              <Button
+                variant="outline"
+                className="flex-1"
+                disabled={paymentStatus.isProcessing}
+              >
+                Cancelar
+              </Button>
+            </DialogClose>
             <Button
-              className="w-full bg-black text-white hover:bg-gray-800"
+              className="flex-1 bg-black text-white hover:bg-gray-800"
               onClick={onPay}
               disabled={paymentStatus.isProcessing}
             >
@@ -175,12 +190,12 @@ export function PaymentModal({
                   Procesando...
                 </span>
               ) : (
-                "Pagar ahora"
+                `Pagar ${totalPriceWLD.toFixed(6)} WLD`
               )}
             </Button>
           </div>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

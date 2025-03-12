@@ -213,17 +213,16 @@ export default function ItemDetailView({
         </div>
       </div>
 
-      {showPaymentModal && (
-        <PaymentModal
-          item={item}
-          quantity={quantity}
-          onClose={() => setShowPaymentModal(false)}
-          onPay={handlePayment}
-          paymentStatus={paymentStatus}
-          exchangeRate={{ WLDtoPEN, PENtoWLD: convertPENtoWLD(1) }}
-          commissionSummary={commissionSummary}
-        />
-      )}
+      <PaymentModal
+        item={item}
+        quantity={quantity}
+        open={showPaymentModal}
+        onOpenChange={setShowPaymentModal}
+        onPay={handlePayment}
+        paymentStatus={paymentStatus}
+        exchangeRate={{ WLDtoPEN, PENtoWLD: convertPENtoWLD(1) }}
+        commissionSummary={commissionSummary}
+      />
     </div>
   );
 }
