@@ -9,21 +9,24 @@ import Image from "next/image";
 interface PaymentModalProps {
   item: Item;
   quantity: number;
-  wldAmount: number;
   onClose: () => void;
   onPay: () => void;
   paymentStatus: PaymentStatus;
+  exchangeRate: { WLDtoPEN: number; PENtoWLD: number } | null;
 }
 
 export function PaymentModal({
   item,
   quantity,
-  wldAmount,
   onClose,
   onPay,
   paymentStatus,
+  exchangeRate,
 }: PaymentModalProps) {
-  const totalPrice = item.price * quantity;
+  const totalPricePEN = item.price * quantity;
+  const totalPriceWLD = exchangeRate
+    ? totalPricePEN * exchangeRate.PENtoWLD
+    : 0;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -48,7 +51,12 @@ export function PaymentModal({
             <div>
               <h3 className="font-medium">{item.name}</h3>
               <p className="text-sm text-gray-600">Cantidad: {quantity}</p>
-              <p className="font-semibold">S/{totalPrice.toFixed(2)}</p>
+              <p className="font-semibold">S/{totalPricePEN.toFixed(2)}</p>
+              {exchangeRate && (
+                <p className="text-sm text-gray-500">
+                  {totalPriceWLD.toFixed(6)} WLD
+                </p>
+              )}
             </div>
           </div>
 
@@ -60,9 +68,11 @@ export function PaymentModal({
               </div>
               <div className="flex-1">
                 <span className="font-medium">Pago con WorldCoin</span>
-                <p className="text-sm text-gray-600">
-                  {wldAmount.toFixed(6)} WLD
-                </p>
+                {exchangeRate && (
+                  <p className="text-xs text-gray-500">
+                    Tipo de cambio: 1 WLD = S/{exchangeRate.WLDtoPEN.toFixed(2)}
+                  </p>
+                )}
               </div>
             </div>
           </div>

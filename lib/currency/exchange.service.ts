@@ -18,12 +18,7 @@ export async function getExchangeRate(): Promise<{
   PENtoWLD: number;
 }> {
   try {
-    const response = await fetch(
-      "https://app-backend.worldcoin.dev/public/v1/miniapps/prices?cryptoCurrencies=WLD&fiatCurrencies=PEN",
-      {
-        method: "GET",
-      }
-    );
+    const response = await fetch("/api/exchange-rate");
 
     console.log(response);
 

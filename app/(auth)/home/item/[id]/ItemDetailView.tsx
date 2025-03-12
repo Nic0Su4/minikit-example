@@ -9,7 +9,7 @@ import { usePayment } from "@/hooks/usePayment";
 import { useUser } from "../../../../user-context";
 import { useRouter } from "next/navigation";
 import { PaymentModal } from "./PaymentModal";
-import { convertPENtoWLD } from "@/lib/currency/exchange.service";
+import { useExchangeRate } from "@/hooks/useExchangeRate";
 
 interface ItemDetailViewProps {
   item: Item;
@@ -22,32 +22,16 @@ export default function ItemDetailView({
 }: ItemDetailViewProps) {
   const [quantity, setQuantity] = useState(1);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [wldAmount, setWldAmount] = useState<number | null>(null);
-  const [isLoadingRate, setIsLoadingRate] = useState(false);
   const { paymentStatus, processPayment } = usePayment();
   const { user } = useUser();
   const router = useRouter();
 
-  useEffect(() => {
-    const calculateWLDAmount = async () => {
-      if (item && quantity > 0) {
-        setIsLoadingRate(true);
-        try {
-          // Calcular el monto total en PEN
-          const totalPEN = item.price * quantity;
-          // Convertir a WLD
-          const amountInWLD = await convertPENtoWLD(totalPEN);
-          setWldAmount(amountInWLD);
-        } catch (error) {
-          console.error("Error al calcular el monto en WLD:", error);
-        } finally {
-          setIsLoadingRate(false);
-        }
-      }
-    };
-
-    calculateWLDAmount();
-  }, [item, quantity]);
+  const {
+    convertPENtoWLD,
+    WLDtoPEN,
+    loading: loadingRates,
+    error: rateError,
+  } = useExchangeRate();
 
   useEffect(() => {
     if (!user) {
@@ -77,10 +61,9 @@ export default function ItemDetailView({
   };
 
   const handlePayment = () => {
-    if (!wldAmount || !user?.walletAddress) {
-      console.error("No se puede procesar el pago: falta información");
-      return;
-    }
+    const totalPEN = item.price * quantity;
+
+    const wldAmount = convertPENtoWLD(totalPEN);
 
     const description = `Compra de ${quantity} unidad(es) de ${item.name}`;
 
@@ -104,6 +87,8 @@ export default function ItemDetailView({
     );
   };
 
+  const priceInWLD = convertPENtoWLD(item.price);
+
   return (
     <div className="flex flex-col max-w-md mx-auto">
       {/* Product Image */}
@@ -125,11 +110,14 @@ export default function ItemDetailView({
 
         <div className="text-2xl font-bold">S/{item.price.toFixed(2)}</div>
 
-        {wldAmount !== null && (
-          <div className="text-sm text-gray-600">
-            Equivalente a {wldAmount.toFixed(6)} WLD
-          </div>
-        )}
+        <p className="text-sm text-gray-500">
+          {priceInWLD.toFixed(6)} WLD
+          {rateError && (
+            <span className="text-xs text-amber-600 ml-2">
+              (tipo de cambio aproximado)
+            </span>
+          )}
+        </p>
 
         <div>
           <p className="text-sm text-gray-600 mb-2">Cantidad</p>
@@ -206,21 +194,20 @@ export default function ItemDetailView({
             variant="outline"
             className="w-full border-black text-black hover:bg-gray-100"
             onClick={buyNow}
-            disabled={isLoadingRate || wldAmount === null}
           >
-            {isLoadingRate ? "Calculando..." : "Comprar ahora"}
+            Comprar ahora
           </Button>
         </div>
       </div>
 
-      {showPaymentModal && wldAmount !== null && (
+      {showPaymentModal && (
         <PaymentModal
           item={item}
           quantity={quantity}
-          wldAmount={wldAmount}
           onClose={() => setShowPaymentModal(false)}
           onPay={handlePayment}
           paymentStatus={paymentStatus}
+          exchangeRate={{ WLDtoPEN, PENtoWLD: convertPENtoWLD(1) }}
         />
       )}
     </div>
