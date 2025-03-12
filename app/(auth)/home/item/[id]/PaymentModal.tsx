@@ -88,7 +88,7 @@ export function PaymentModal({
                     <div className="flex items-center">
                       <span>{formatCommissionType(detail.commission)}</span>
                       <TooltipProvider>
-                        <Tooltip>
+                        <Tooltip open={false}>
                           <TooltipTrigger asChild>
                             <button className="ml-1 text-gray-400 hover:text-gray-600">
                               <Info className="h-3.5 w-3.5" />
