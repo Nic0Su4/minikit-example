@@ -29,7 +29,7 @@ interface PaymentModalProps {
   quantity: number;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onPay: () => void;
+  onPay: (commission: number) => void;
   paymentStatus: PaymentStatus;
   exchangeRate: { WLDtoPEN: number; PENtoWLD: number } | null;
   commissionSummary: CommissionSummary | null;
@@ -181,7 +181,9 @@ export function PaymentModal({
             </DialogClose>
             <Button
               className="flex-1 bg-black text-white hover:bg-gray-800"
-              onClick={onPay}
+              onClick={() => {
+                onPay(totalCommission);
+              }}
               disabled={paymentStatus.isProcessing}
             >
               {paymentStatus.isProcessing ? (

@@ -73,8 +73,8 @@ export default function ItemDetailView({
     setShowPaymentModal(true);
   };
 
-  const handlePayment = () => {
-    const totalPEN = item.price * quantity;
+  const handlePayment = (commissions: number) => {
+    const totalPEN = item.price * quantity + commissions;
 
     const wldAmount = convertPENtoWLD(totalPEN);
 
