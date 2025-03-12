@@ -22,7 +22,12 @@ export default function ItemDetailView({
 }: ItemDetailViewProps) {
   const [quantity, setQuantity] = useState(1);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const { paymentStatus, processPayment } = usePayment();
+  const {
+    paymentStatus,
+    commissionSummary,
+    calculateItemCommissions,
+    processPayment,
+  } = usePayment();
   const { user } = useUser();
   const router = useRouter();
 
@@ -56,7 +61,15 @@ export default function ItemDetailView({
     console.log(`Añadiendo ${quantity} unidades de ${item.name} al carrito`);
   };
 
-  const buyNow = () => {
+  const buyNow = async () => {
+    await calculateItemCommissions([
+      {
+        item,
+        quantity,
+        storeId: item.storeId,
+      },
+    ]);
+
     setShowPaymentModal(true);
   };
 
@@ -208,6 +221,7 @@ export default function ItemDetailView({
           onPay={handlePayment}
           paymentStatus={paymentStatus}
           exchangeRate={{ WLDtoPEN, PENtoWLD: convertPENtoWLD(1) }}
+          commissionSummary={commissionSummary}
         />
       )}
     </div>

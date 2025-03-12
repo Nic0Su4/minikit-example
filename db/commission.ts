@@ -96,4 +96,10 @@ const calculateCommissionAmount = (
   }
 };
 
-export { getCommissionById, getCommissionByAmount, getCommissions };
+export {
+  getCommissionById,
+  getCommissionByAmount,
+  getCommissions,
+  getAllCommissionsByAmount,
+  calculateCommissionAmount,
+};

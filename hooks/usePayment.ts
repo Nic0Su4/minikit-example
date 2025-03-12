@@ -6,11 +6,16 @@ import {
   executePayment,
   confirmPayment,
   pollAutoSwap,
-  registerBuy,
-  registerPayment,
   type PaymentStatus,
+  registerPayment,
+  registerBuy,
 } from "@/lib/payment/payment.service";
 import { BuyEntry, Item } from "@/db/types";
+import {
+  calculateCommissions,
+  type CommissionSummary,
+} from "@/lib/payment/commission.service";
+import { setPayment } from "@/db/payment";
 
 export function usePayment() {
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>({
@@ -18,6 +23,8 @@ export function usePayment() {
     error: "",
     isProcessing: false,
   });
+  const [commissionSummary, setCommissionSummary] =
+    useState<CommissionSummary | null>(null);
 
   const updateStatus = (status: string) => {
     setPaymentStatus((prev) => ({ ...prev, status }));
@@ -27,6 +34,25 @@ export function usePayment() {
   const updateError = (error: string) => {
     setPaymentStatus((prev) => ({ ...prev, error, status: "" }));
     console.error("Error en el pago:", error);
+  };
+
+  const calculateItemCommissions = async (
+    purchaseItems: {
+      item: Item;
+      quantity: number;
+      storeId: string;
+    }[]
+  ) => {
+    try {
+      const summary = await calculateCommissions(
+        purchaseItems.map(({ item, quantity }) => ({ item, quantity }))
+      );
+      setCommissionSummary(summary);
+      return summary;
+    } catch (error) {
+      console.error("Error al calcular comisiones:", error);
+      return null;
+    }
   };
 
   const processPayment = async (
@@ -51,6 +77,13 @@ export function usePayment() {
     });
 
     try {
+      updateStatus("Calculando comisiones...");
+      const commissions = await calculateItemCommissions(purchaseItems);
+
+      if (!commissions) {
+        throw new Error("No se pudieron calcular las comisiones");
+      }
+
       updateStatus("Generando referencia de pago...");
       const { id: reference } = await initiatePayment();
       console.log("Referencia generada:", reference);
@@ -86,7 +119,7 @@ export function usePayment() {
         (sum, { item, quantity }) => sum + item.price * quantity,
         0
       );
-      const commissionAmount = totalAmount * 0.05; // 5% de comisión
+      const commissionAmount = commissions.totalCommission;
 
       const paymentId = await registerPayment(
         clientId,
@@ -138,6 +171,8 @@ export function usePayment() {
 
   return {
     paymentStatus,
+    commissionSummary,
+    calculateItemCommissions,
     processPayment,
   };
 }

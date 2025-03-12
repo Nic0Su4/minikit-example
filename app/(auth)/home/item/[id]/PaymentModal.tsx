@@ -2,9 +2,20 @@
 
 import type { Item } from "@/db/types";
 import { Button } from "@/components/ui/button";
-import { X, Loader2 } from "lucide-react";
+import { X, Loader2, Info } from "lucide-react";
 import type { PaymentStatus } from "@/lib/payment/payment.service";
 import Image from "next/image";
+import {
+  type CommissionSummary,
+  formatCommissionType,
+  getCommissionDescription,
+} from "@/lib/payment/commission.service";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface PaymentModalProps {
   item: Item;
@@ -13,6 +24,7 @@ interface PaymentModalProps {
   onPay: () => void;
   paymentStatus: PaymentStatus;
   exchangeRate: { WLDtoPEN: number; PENtoWLD: number } | null;
+  commissionSummary: CommissionSummary | null;
 }
 
 export function PaymentModal({
@@ -22,11 +34,12 @@ export function PaymentModal({
   onPay,
   paymentStatus,
   exchangeRate,
+  commissionSummary,
 }: PaymentModalProps) {
   const totalPricePEN = item.price * quantity;
-  const totalPriceWLD = exchangeRate
-    ? totalPricePEN * exchangeRate.PENtoWLD
-    : 0;
+  const totalCommission = commissionSummary?.totalCommission || 0;
+  const grandTotal = totalPricePEN + totalCommission;
+  const totalPriceWLD = exchangeRate ? grandTotal * exchangeRate.PENtoWLD : 0;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -52,12 +65,68 @@ export function PaymentModal({
               <h3 className="font-medium">{item.name}</h3>
               <p className="text-sm text-gray-600">Cantidad: {quantity}</p>
               <p className="font-semibold">S/{totalPricePEN.toFixed(2)}</p>
-              {exchangeRate && (
-                <p className="text-sm text-gray-500">
-                  {totalPriceWLD.toFixed(6)} WLD
-                </p>
-              )}
             </div>
+          </div>
+
+          {commissionSummary && commissionSummary.details.length > 0 && (
+            <div className="border rounded-md p-3 bg-gray-50">
+              <h3 className="text-sm font-medium mb-2">
+                Comisiones aplicables:
+              </h3>
+              <div className="space-y-2">
+                {commissionSummary.details.map((detail, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-between items-center text-sm"
+                  >
+                    <div className="flex items-center">
+                      <span>{formatCommissionType(detail.commission)}</span>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button className="ml-1 text-gray-400 hover:text-gray-600">
+                              <Info className="h-3.5 w-3.5" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className="text-xs max-w-xs">
+                              {getCommissionDescription(detail.commission)}
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                    <span>S/{detail.amount.toFixed(2)}</span>
+                  </div>
+                ))}
+                <div className="flex justify-between items-center pt-2 border-t text-sm font-medium">
+                  <span>Total comisiones:</span>
+                  <span>S/{totalCommission.toFixed(2)}</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Total a pagar */}
+          <div className="border-t pt-3">
+            <div className="flex justify-between items-center mb-1">
+              <span className="text-sm">Subtotal:</span>
+              <span className="text-sm">S/{totalPricePEN.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between items-center mb-1">
+              <span className="text-sm">Comisiones:</span>
+              <span className="text-sm">S/{totalCommission.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between items-center font-medium">
+              <span>Total a pagar:</span>
+              <span>S/{grandTotal.toFixed(2)}</span>
+            </div>
+            {exchangeRate && (
+              <div className="flex justify-between items-center text-sm text-gray-500 mt-1">
+                <span>Total en WLD:</span>
+                <span>{totalPriceWLD.toFixed(6)} WLD</span>
+              </div>
+            )}
           </div>
 
           <div className="border-t pt-4">
