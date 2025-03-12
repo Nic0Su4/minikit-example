@@ -92,8 +92,9 @@ export interface Item {
 export type CommissionType = "percentage" | "fixed";
 
 export interface CommissionsClient {
-  minTreshold: number | null;
-  maxTreshold: number | null;
+  id: string;
+  minThreshold: number | null;
+  maxThreshold: number | null;
   amount: number;
   type: CommissionType;
 }
