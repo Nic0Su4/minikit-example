@@ -2,8 +2,9 @@ import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import { getCategoryById } from "@/db/category";
-import { Store } from "@/db/types";
-import { getStoresByCategory } from "@/db/store";
+import { Item } from "@/db/types";
+import { getItemsByCategory } from "@/db/item";
+import CategoryHeader from "./CategoryHeader";
 
 export default async function CategoryPage({
   params,
@@ -12,31 +13,31 @@ export default async function CategoryPage({
 }) {
   const category = await getCategoryById(params.id);
 
-  const stores = await getStoresByCategory(category.id);
+  const items = await getItemsByCategory(category.id);
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">{category.name}</h1>
-      <div className="grid grid-cols-1 gap-4">
-        {stores.length > 0 ? (
-          stores.map((store: Store) => (
-            <Link key={store.id} href={`/home/store/${store.id}`}>
-              <Card className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle>{store.name}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex justify-between">
-                    <p>
-                      {store.local?.direction?.direction || "Sin dirección"}
-                    </p>
-                    <div>
+      <CategoryHeader categoryName={category.name} itemCount={items.length} />
+      <div className="grid grid-cols-2 gap-4 mt-4">
+        {items.length > 0 ? (
+          items.map((item: Item) => (
+            <Link key={item.id} href={`/home/item/${item.id}`}>
+              <Card className="hover:shadow-lg transition-shadow border-0">
+                <CardContent className="p-0">
+                  <div className="flex flex-col">
+                    <div className="bg-gray-200 aspect-square w-full relative">
                       <Image
-                        src={store.logoImgLink || ""}
-                        alt="Logo tienda"
-                        height={50}
-                        width={50}
+                        src={item.imageImgLink || ""}
+                        alt={item.name}
+                        fill
+                        className="object-cover"
                       />
+                    </div>
+                    <div className="p-3">
+                      <p className="text-sm font-medium">{item.name}</p>
+                      <p className="font-semibold mt-1">
+                        S/.{item.price.toFixed(2)}
+                      </p>
                     </div>
                   </div>
                 </CardContent>
@@ -44,7 +45,9 @@ export default async function CategoryPage({
             </Link>
           ))
         ) : (
-          <p>No hay tiendas en esta categoría</p>
+          <p className="col-span-full text-center py-8 text-muted-foreground">
+            No hay ítems en esta categorías
+          </p>
         )}
       </div>
     </div>

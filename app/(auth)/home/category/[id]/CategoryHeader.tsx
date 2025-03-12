@@ -11,21 +11,21 @@ import {
 } from "@/components/ui/select";
 import { LayoutGrid, List } from "lucide-react";
 
-interface StoreHeaderProps {
-  storeName: string;
+interface CategoryHeaderProps {
+  categoryName: string;
   itemCount: number;
 }
 
-export default function StoreHeader({
-  storeName,
+export default function CategoryHeader({
+  categoryName,
   itemCount,
-}: StoreHeaderProps) {
+}: CategoryHeaderProps) {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-2xl font-bold">{storeName}</h1>
+        <h1 className="text-2xl font-bold">{categoryName}</h1>
         <p className="text-sm text-muted-foreground">{itemCount} items</p>
       </div>
 

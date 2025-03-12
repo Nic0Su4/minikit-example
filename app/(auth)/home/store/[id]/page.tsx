@@ -4,7 +4,7 @@ import { Item } from "@/db/types";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
-import StoreHeader from "./StoreHeader";
+// import StoreHeader from "./CategoryHeader";
 
 export default async function StorePage({
   params,
@@ -19,7 +19,7 @@ export default async function StorePage({
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
-        <StoreHeader storeName={store.name} itemCount={items.length} />
+        {/* <StoreHeader storeName={store.name} itemCount={items.length} /> */}
 
         <div className="grid grid-cols-2 gap-4 mt-4">
           {items.length > 0 ? (
