@@ -22,11 +22,12 @@ const dataToBuyDB = (data: any, id: string): Buy => {
   };
 };
 
-const setBuy = async (buy: Buy, id?: string): Promise<void> => {
+const setBuy = async (buy: Buy, id?: string) => {
   const buyRef = id
     ? doc(db, COLLECTIONS.BUY, id)
     : doc(collection(db, COLLECTIONS.BUY));
   await setDoc(buyRef, buy);
+  return buyRef.id;
 };
 
 const getBuyById = async (id: string): Promise<Buy> => {

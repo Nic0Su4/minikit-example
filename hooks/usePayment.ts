@@ -6,8 +6,11 @@ import {
   executePayment,
   confirmPayment,
   pollAutoSwap,
+  registerBuy,
+  registerPayment,
   type PaymentStatus,
 } from "@/lib/payment/payment.service";
+import { BuyEntry, Item } from "@/db/types";
 
 export function usePayment() {
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>({
@@ -27,8 +30,14 @@ export function usePayment() {
   };
 
   const processPayment = async (
+    clientId: string,
     tokenWLD: number,
     description = "Pago de producto",
+    purchaseItems: {
+      item: Item;
+      quantity: number;
+      storeId: string;
+    }[],
     onSuccess?: () => void
   ) => {
     if (paymentStatus.isProcessing) {
@@ -70,6 +79,52 @@ export function usePayment() {
       updateStatus(
         "Swap completado exitosamente. Transacción: " + swapData.order
       );
+
+      // * Comienza la creación de la compra
+      updateStatus("Registrando el pago...");
+      const totalAmount = purchaseItems.reduce(
+        (sum, { item, quantity }) => sum + item.price * quantity,
+        0
+      );
+      const commissionAmount = totalAmount * 0.05; // 5% de comisión
+
+      const paymentId = await registerPayment(
+        clientId,
+        totalAmount,
+        commissionAmount
+      );
+
+      updateStatus("Registrando la compra...");
+
+      const storeItemsMap = new Map<
+        string,
+        { itemId: string; ammount: number; redeemed: number }[]
+      >();
+
+      purchaseItems.forEach(({ item, quantity, storeId }) => {
+        if (!storeItemsMap.has(storeId)) {
+          storeItemsMap.set(storeId, []);
+        }
+
+        storeItemsMap.get(storeId)?.push({
+          itemId: item.id,
+          ammount: quantity,
+          redeemed: 0,
+        });
+      });
+
+      const buyEntries: BuyEntry[] = [];
+
+      storeItemsMap.forEach((items, storeId) => {
+        buyEntries.push({
+          storeId,
+          items,
+        });
+      });
+
+      await registerBuy(clientId, paymentId, buyEntries);
+
+      updateStatus("Compra registrada exitosamente");
 
       if (onSuccess) {
         onSuccess();

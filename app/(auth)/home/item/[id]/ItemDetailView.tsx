@@ -1,11 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import type { Item } from "@/db/types";
 import { Minus, Plus } from "lucide-react";
 import { usePayment } from "@/hooks/usePayment";
+import { useUser } from "../../../../user-context";
+import { useRouter } from "next/navigation";
+import { PaymentModal } from "./PaymentModal";
 
 interface ItemDetailViewProps {
   item: Item;
@@ -19,6 +22,14 @@ export default function ItemDetailView({
   const [quantity, setQuantity] = useState(1);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const { paymentStatus, processPayment } = usePayment();
+  const { user } = useUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!user) {
+      router.push("/");
+    }
+  }, [user, router]);
 
   const decreaseQuantity = () => {
     if (quantity > 1) {
@@ -33,7 +44,7 @@ export default function ItemDetailView({
   };
 
   const addToCart = () => {
-    // Implementar lógica para añadir al carrito
+    // TODO Implementar lógica para añadir al carrito
     console.log(`Añadiendo ${quantity} unidades de ${item.name} al carrito`);
   };
 
@@ -45,10 +56,25 @@ export default function ItemDetailView({
     const wldAmount = 0.1;
     const description = `Compra de ${quantity} unidad(es) de ${item.name}`;
 
-    processPayment(wldAmount, description, () => {
-      console.log("Pago completado con éxito");
-      setShowPaymentModal(false);
-    });
+    // Preparar los items para la compra
+    const purchaseItems = [
+      {
+        item,
+        quantity,
+        storeId: item.storeId,
+      },
+    ];
+
+    processPayment(
+      user!.walletAddress!, // ID del cliente
+      wldAmount,
+      description,
+      purchaseItems,
+      () => {
+        console.log("Pago completado con éxito");
+        setShowPaymentModal(false);
+      }
+    );
   };
 
   return (
@@ -152,6 +178,16 @@ export default function ItemDetailView({
           </Button>
         </div>
       </div>
+
+      {showPaymentModal && (
+        <PaymentModal
+          item={item}
+          quantity={quantity}
+          onClose={() => setShowPaymentModal(false)}
+          onPay={handlePayment}
+          paymentStatus={paymentStatus}
+        />
+      )}
     </div>
   );
 }

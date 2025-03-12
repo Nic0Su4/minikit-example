@@ -1,3 +1,6 @@
+import { setBuy } from "@/db/buy";
+import { setPayment } from "@/db/payment";
+import { Buy, BuyEntry, Payment } from "@/db/types";
 import {
   MiniKit,
   type PayCommandInput,
@@ -5,7 +8,8 @@ import {
   tokenToDecimals,
 } from "@worldcoin/minikit-js";
 
-const RECEIVER_ADDRESS = "0x4f2f92cf7c8d18f440bad599b4e9615838433220";
+const RECEIVER_ADDRESS =
+  process.env.RECEIVER_ADDRESS || "0x4f2f92cf7c8d18f440bad599b4e9615838433220";
 
 export interface PaymentStatus {
   status: string;
@@ -97,4 +101,34 @@ export async function executePayment(
       throw e;
     }
   }
+}
+
+export async function registerPayment(
+  clientId: string,
+  amount: number,
+  commissionAmount: number
+): Promise<string> {
+  // Crear objeto de pago
+  const payment: Payment = {
+    clientId,
+    paidAt: new Date().toISOString(),
+    amount,
+    commissionAmount,
+  };
+
+  return await setPayment(payment);
+}
+
+export async function registerBuy(
+  clientId: string,
+  paymentId: string,
+  buyEntries: BuyEntry[]
+): Promise<string> {
+  const buy: Buy = {
+    clientId,
+    paymentId,
+    buys: buyEntries,
+  };
+
+  return await setBuy(buy);
 }
