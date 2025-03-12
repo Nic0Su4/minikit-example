@@ -66,13 +66,13 @@ export function getCommissionDescription(
   commission: CommissionsClient
 ): string {
   const minText =
-    commission.minTreshold !== null
-      ? `S/.${commission.minTreshold.toFixed(2)}`
+    commission.minThreshold !== null
+      ? `S/.${commission.minThreshold.toFixed(2)}`
       : "cualquier precio";
 
   const maxText =
-    commission.maxTreshold !== null
-      ? `S/.${commission.maxTreshold.toFixed(2)}`
+    commission.maxThreshold !== null
+      ? `S/.${commission.maxThreshold.toFixed(2)}`
       : "sin límite";
 
   return `Comisión de ${formatCommissionType(
