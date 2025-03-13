@@ -37,8 +37,6 @@ export default async function CartPage() {
     0
   );
 
-  const items = itemsInCart.map((item: ItemInCart) => item.item);
-
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 max-w-2xl">
@@ -54,7 +52,7 @@ export default async function CartPage() {
                 <span className="text-2xl font-bold">S/{total.toFixed(2)}</span>
               </div>
 
-              <CheckoutButton items={items} />
+              <CheckoutButton items={itemsInCart} />
             </div>
           </>
         ) : (
