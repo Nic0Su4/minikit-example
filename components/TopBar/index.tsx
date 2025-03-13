@@ -1,16 +1,14 @@
-"use server";
-
 import Link from "next/link";
 import { ShoppingCart, Menu, Store } from "lucide-react";
 import { cookies } from "next/headers";
+import { getCookieCart } from "@/app/cart/actions";
 
 export function TopBar() {
-  const cookieStore = cookies();
-  const cart = JSON.parse(cookieStore.get("cart")?.value ?? "{}");
+  const cookieCart = getCookieCart();
 
   const getTotalCount = () => {
     let items = 0;
-    Object.values(cart).forEach((value) => {
+    Object.values(cookieCart).forEach((value) => {
       items += value as number;
     });
 
