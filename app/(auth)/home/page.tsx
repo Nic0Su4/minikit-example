@@ -1,11 +1,9 @@
 "use client";
 
 import { useUser } from "@/app/user-context";
-import { TopBar } from "@/components/TopBar";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getCategories } from "@/db/category";
-import { Loader2, ShoppingBag, Sparkles, TrendingUp } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

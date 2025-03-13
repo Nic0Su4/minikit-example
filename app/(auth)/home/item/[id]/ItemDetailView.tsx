@@ -10,6 +10,7 @@ import { useUser } from "../../../../user-context";
 import { useRouter } from "next/navigation";
 import { PaymentModal } from "./PaymentModal";
 import { useExchangeRate } from "@/hooks/useExchangeRate";
+import { addProductTocart } from "@/app/cart/actions";
 
 interface ItemDetailViewProps {
   item: Item;
@@ -59,6 +60,9 @@ export default function ItemDetailView({
   const addToCart = () => {
     // TODO Implementar lógica para añadir al carrito
     console.log(`Añadiendo ${quantity} unidades de ${item.name} al carrito`);
+
+    addProductTocart(item.id, quantity);
+    router.refresh();
   };
 
   const buyNow = async () => {
