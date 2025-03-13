@@ -107,7 +107,7 @@ export default function OrderDetails({ buy }: OrderDetailsProps) {
   }
 
   // Generar URL para el QR con el formato solicitado
-  const qrUrl = `www.paginadeejemplo.com/scan-qr?buyid=${buy.paymentId}`;
+  const qrUrl = `www.paginadeejemplo.com/scan-qr?buyid=${buy.id}`;
 
   return (
     <div className="border-t">

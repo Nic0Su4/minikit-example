@@ -16,6 +16,7 @@ export interface BuyEntry {
 }
 
 export interface Buy {
+  id: string;
   clientId: string;
   paymentId: string;
   buys: BuyEntry[];
