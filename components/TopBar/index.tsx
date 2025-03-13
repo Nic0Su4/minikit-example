@@ -15,7 +15,7 @@ export function TopBar() {
   };
 
   return (
-    <div className="flex justify-between items-center p-4 border-b">
+    <div className="fixed top-0 left-0 right-0 flex justify-between items-center p-4 border-b bg-background z-10">
       <Link href="/home" className="flex items-center">
         <Store className="h-6 w-6" />
         <span className="ml-2 font-semibold">KipiMarketplace</span>
