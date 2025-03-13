@@ -28,6 +28,7 @@ export default function OrdersPage() {
       setLoading(true);
       try {
         const buys = await getBuysByClient(user?.walletAddress!);
+        console.log("buys", buys);
         const payments = await Promise.all(
           buys.map((buy) => getPaymentById(buy.paymentId))
         );
