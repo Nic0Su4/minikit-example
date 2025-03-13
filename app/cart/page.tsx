@@ -2,6 +2,7 @@ import { getItemById } from "@/db/item";
 import { Item } from "@/db/types";
 import { cookies } from "next/headers";
 import CartItemList from "./CartView";
+import CheckoutButton from "./CheckoutButton";
 
 interface ItemInCart {
   item: Item;
@@ -36,6 +37,8 @@ export default async function CartPage() {
     0
   );
 
+  const items = itemsInCart.map((item: ItemInCart) => item.item);
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 max-w-2xl">
@@ -51,14 +54,7 @@ export default async function CartPage() {
                 <span className="text-2xl font-bold">S/{total.toFixed(2)}</span>
               </div>
 
-              <button
-                className="w-full bg-black text-white py-3 rounded-md hover:bg-gray-800 transition-colors"
-                onClick={() => {
-                  /* TODO: Implementar checkout */
-                }}
-              >
-                Proceder al pago
-              </button>
+              <CheckoutButton items={items} />
             </div>
           </>
         ) : (

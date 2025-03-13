@@ -63,6 +63,7 @@ export default function CartItemList({ items }: CartItemListProps) {
               <button
                 onClick={() => handleDecrementQuantity(item.item.id)}
                 className="w-8 h-8 flex items-center justify-center border rounded-md hover:bg-gray-50"
+                type="button"
               >
                 <Minus className="h-4 w-4" />
               </button>
@@ -72,6 +73,7 @@ export default function CartItemList({ items }: CartItemListProps) {
               <button
                 onClick={() => handleIncrementQuantity(item.item.id)}
                 className="w-8 h-8 flex items-center justify-center border rounded-md hover:bg-gray-50"
+                type="button"
               >
                 <Plus className="h-4 w-4" />
               </button>
@@ -82,6 +84,7 @@ export default function CartItemList({ items }: CartItemListProps) {
             onClick={() => handleRemoveItem(item.item.id)}
             className="p-2 text-gray-400 hover:text-gray-600"
             aria-label="Eliminar producto"
+            type="button"
           >
             <Trash2 className="h-5 w-5" />
           </button>
