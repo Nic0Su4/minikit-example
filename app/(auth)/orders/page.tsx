@@ -3,12 +3,12 @@
 import { getBuysByClient } from "@/db/buy";
 import { getPaymentById } from "@/db/payment";
 import type { Buy, Payment } from "@/db/types";
-import { MiniKit } from "@worldcoin/minikit-js";
 import { useEffect, useState } from "react";
 import OrdersList from "./OrdersList";
 import { useSearchParams } from "next/navigation";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle } from "lucide-react";
+import { useUser } from "@/app/user-context";
 
 export default function OrdersPage() {
   const [ordersWithPayments, setOrdersWithPayments] = useState<
@@ -19,15 +19,15 @@ export default function OrdersPage() {
   const searchParams = useSearchParams();
   const showSuccessMessage = searchParams.get("success") === "true";
 
-  const clientId = MiniKit.walletAddress;
+  const { user } = useUser();
 
   useEffect(() => {
-    if (!clientId) return; // Si no tenemos el clientId, no hacemos nada
+    if (!user?.walletAddress) return;
 
     async function fetchOrders() {
       setLoading(true);
       try {
-        const buys = await getBuysByClient(clientId!);
+        const buys = await getBuysByClient(user?.walletAddress!);
         const payments = await Promise.all(
           buys.map((buy) => getPaymentById(buy.paymentId))
         );
@@ -45,7 +45,7 @@ export default function OrdersPage() {
     }
 
     fetchOrders();
-  }, [clientId]);
+  }, [user?.walletAddress]);
 
   return (
     <div className="min-h-screen bg-gray-50">
