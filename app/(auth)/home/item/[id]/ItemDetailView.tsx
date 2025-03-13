@@ -102,6 +102,7 @@ export default function ItemDetailView({
       () => {
         console.log("Pago completado con éxito");
         setShowPaymentModal(false);
+        router.push("/orders?success=true");
       }
     );
   };

@@ -106,6 +106,7 @@ export function CheckoutModal({
         if (onSuccess) {
           onSuccess();
         }
+        router.push("/orders?success=true");
       }
     );
   };
