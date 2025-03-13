@@ -16,7 +16,11 @@ export default async function ItemPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="min-h-screen bg-background">
-      <ItemDetailView item={item} storeName={store?.name || "Tienda"} />
+      <ItemDetailView
+        item={item}
+        storeName={store?.name || "Tienda"}
+        storeId={store.id || ""}
+      />
     </div>
   );
 }

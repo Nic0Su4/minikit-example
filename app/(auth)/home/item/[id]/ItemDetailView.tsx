@@ -11,15 +11,18 @@ import { useRouter } from "next/navigation";
 import { PaymentModal } from "./PaymentModal";
 import { useExchangeRate } from "@/hooks/useExchangeRate";
 import { addProductTocart } from "@/app/cart/actions";
+import Link from "next/link";
 
 interface ItemDetailViewProps {
   item: Item;
   storeName: string;
+  storeId: string;
 }
 
 export default function ItemDetailView({
   item,
   storeName,
+  storeId,
 }: ItemDetailViewProps) {
   const [quantity, setQuantity] = useState(1);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -58,7 +61,6 @@ export default function ItemDetailView({
   };
 
   const addToCart = () => {
-    // TODO Implementar lógica para añadir al carrito
     console.log(`Añadiendo ${quantity} unidades de ${item.name} al carrito`);
 
     addProductTocart(item.id, quantity);
@@ -122,7 +124,10 @@ export default function ItemDetailView({
       <div className="p-4 space-y-4">
         <h1 className="text-xl font-semibold">{item.name}</h1>
         <p className="text-sm text-gray-600">
-          Vendido por <span className="font-medium">{storeName}</span>
+          Vendido por{" "}
+          <Link href={`/home/store/${storeId}`} className="font-medium">
+            {storeName}
+          </Link>
         </p>
 
         <div className="text-2xl font-bold">S/{item.price.toFixed(2)}</div>
