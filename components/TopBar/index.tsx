@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ShoppingCart, Menu, Store } from "lucide-react";
-import { cookies } from "next/headers";
 import { getCookieCart } from "@/app/cart/actions";
 
 export function TopBar() {
