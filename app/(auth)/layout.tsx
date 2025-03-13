@@ -39,7 +39,7 @@ export default function AuthLayout({
     <>
       <div className="flex flex-col min-h-screen bg-background">
         <TopBar />
-        <main className="flex-1 pb-4 pt-4">{children}</main>
+        <main className="flex-1 pb-4 pt-14">{children}</main>
         <BottomNav />
       </div>
     </>
