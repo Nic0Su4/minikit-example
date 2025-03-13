@@ -1,3 +1,5 @@
+"use server";
+
 import Link from "next/link";
 import { ShoppingCart, Menu, Store } from "lucide-react";
 import { cookies } from "next/headers";
