@@ -41,9 +41,6 @@ export function TopBar() {
             {getTotalCount()}
           </span>
         </Link>
-        <button className="ml-4">
-          <Menu className="h-6 w-6" />
-        </button>
       </div>
     </div>
   );
