@@ -18,7 +18,7 @@ export default async function StorePage({
       return await getCategoryById(id);
     } catch (error) {
       console.error(`Error fetching category ${id}:`, error);
-      return { id, name: "Categoría" }; // Fallback
+      return { id, name: "Categoría" };
     }
   });
 

@@ -48,7 +48,7 @@ export default function ProductsSection({ items }: ProductsSectionProps) {
             className="flex items-center gap-2"
           >
             <SlidersHorizontal className="w-4 h-4" />
-            Filtrar por
+            Filtrar
           </Button>
 
           <Select value={sortBy} onValueChange={setSortBy}>
@@ -56,7 +56,7 @@ export default function ProductsSection({ items }: ProductsSectionProps) {
               <SelectValue placeholder="Ordenar por" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="default">Ordenar por</SelectItem>
+              <SelectItem value="default">Ordenar</SelectItem>
               <SelectItem value="price-low">Precio: Menor a Mayor</SelectItem>
               <SelectItem value="price-high">Precio: Mayor a Menor</SelectItem>
               <SelectItem value="name">Nombre</SelectItem>
