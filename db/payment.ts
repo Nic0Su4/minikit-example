@@ -19,7 +19,7 @@ const dataToPaymentDB = (data: any, id: string): Payment => {
   return {
     ...data,
     id,
-    paidAt: data.paidAt.toDate().toISOString(),
+    paidAt: data.paidAt,
   };
 };
 
