@@ -15,7 +15,6 @@ import {
   calculateCommissions,
   type CommissionSummary,
 } from "@/lib/payment/commission.service";
-import { setPayment } from "@/db/payment";
 
 export function usePayment() {
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>({
@@ -131,7 +130,7 @@ export function usePayment() {
 
       const storeItemsMap = new Map<
         string,
-        { itemId: string; ammount: number; redeemed: number }[]
+        { itemId: string; ammount: number; redeemed: number; price: number }[]
       >();
 
       purchaseItems.forEach(({ item, quantity, storeId }) => {
@@ -143,6 +142,7 @@ export function usePayment() {
           itemId: item.id,
           ammount: quantity,
           redeemed: 0,
+          price: item.price,
         });
       });
 

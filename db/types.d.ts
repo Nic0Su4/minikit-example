@@ -7,6 +7,7 @@ export interface BuyItem {
   itemId: string;
   ammount: number;
   redeemed: number;
+  price: number;
 }
 
 export interface BuyEntry {
