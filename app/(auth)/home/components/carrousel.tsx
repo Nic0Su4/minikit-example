@@ -90,7 +90,7 @@ export default function Carrousel() {
             key={item.id}
             className={`min-w-full rounded-xl bg-gradient-to-r ${item.bgColor} text-white min-h-[180px] sm:min-h-[140px]`}
           >
-            <CardContent className="flex flex-col items-start justify-between gap-4 p-4 sm:p-6 sm:flex-row sm:items-center">
+            <CardContent className="flex flex-col items-start justify-between gap-4 p-4 sm:p-6 sm:px-8 sm:flex-row sm:items-center ">
               <div className="space-y-2">
                 <h2 className="text-lg font-bold sm:text-xl md:text-2xl">
                   {item.title}

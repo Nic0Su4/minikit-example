@@ -59,7 +59,13 @@ export default function HomePage() {
   return (
     <div className="flex-1 p-4 max-w-md mx-auto w-full space-y-6">
       <Carrousel />
-      <h2 className="text-2xl font-bold">Categorías</h2>
+      <section>
+        <h2 className="text-2xl font-bold">Categorías</h2>
+        <p className="text-sm text-gray-400">
+          Explora y descubre productos especializados en cada categoría
+          cuidadosamente organizada.
+        </p>
+      </section>
       <div className="grid grid-cols-1 gap-4">
         {categoriesImages.length > 0 ? (
           categoriesImages.map((category) => (

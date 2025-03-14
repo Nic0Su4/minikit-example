@@ -106,7 +106,7 @@ export function usePayment() {
       }
       updateStatus("Pago confirmado en el backend");
 
-      updateStatus("Esperando que los WLD se reflejen en Binance...");
+      updateStatus("Esperando confirmación de pago, no salir de esta pantalla");
       const swapData = await pollAutoSwap(tokenWLD);
       updateStatus(
         "Swap completado exitosamente. Transacción: " + swapData.order

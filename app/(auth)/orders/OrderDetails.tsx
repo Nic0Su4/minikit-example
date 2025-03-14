@@ -106,7 +106,7 @@ export default function OrderDetails({ buy }: OrderDetailsProps) {
     );
   }
 
-  const kipiBusinessUrl = "https://kipi-business.vercel.app/";
+  const kipiBusinessUrl = "https://kipi-business.vercel.app";
 
   const qrUrl = `${kipiBusinessUrl}/scan-qr?buyid=${buy.id}`;
 
