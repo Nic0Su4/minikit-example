@@ -25,7 +25,7 @@ export default function RootLayout({
     }
   );
   return (
-    <html lang="es-PE">
+    <html lang="es">
       <body className={inter.className}>
         <NextAuthProvider>
           <ErudaProvider>
