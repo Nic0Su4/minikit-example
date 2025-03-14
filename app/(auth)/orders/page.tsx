@@ -32,7 +32,7 @@ export default function OrdersPage() {
         const payments = await Promise.all(
           buys.map((buy) => getPaymentById(buy.paymentId))
         );
-        // Combinar ambas informaciones
+
         const combinedOrders = buys.map((buy, index) => ({
           buy,
           payment: payments[index],
