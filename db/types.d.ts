@@ -6,7 +6,7 @@ export interface Client {
 export interface BuyItem {
   itemId: string;
   amount: number;
-  redeemed: number;
+  redemed: number;
   price: number;
 }
 
