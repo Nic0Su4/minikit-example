@@ -25,7 +25,7 @@ export default function StoreHeader({ store, categories }: StoreHeaderProps) {
           alt={`${store.name} banner`}
           // fill
           className="object-cover"
-          priority
+          // priority
         />
       </div>
 
