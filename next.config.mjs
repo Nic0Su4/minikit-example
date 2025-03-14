@@ -18,6 +18,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "https://kbswiwnnsqgxhcdzrfvt.supabase.co/"
       },
+      {
+        protocol: "https",
+        hostname: "https://robohash.org/"
+      },
     ]
   }
 };
