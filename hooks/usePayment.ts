@@ -130,7 +130,15 @@ export function usePayment() {
 
       const storeItemsMap = new Map<
         string,
-        { itemId: string; ammount: number; redeemed: number; price: number }[]
+        {
+          itemId: string;
+          ammount: number;
+          redeemed: number;
+          price: number;
+          name: string;
+          description?: string;
+          imageImgLink?: string;
+        }[]
       >();
 
       purchaseItems.forEach(({ item, quantity, storeId }) => {
@@ -143,6 +151,9 @@ export function usePayment() {
           ammount: quantity,
           redeemed: 0,
           price: item.price,
+          name: item.name,
+          description: item.description,
+          imageImgLink: item.imageImgLink,
         });
       });
 
