@@ -25,7 +25,7 @@ import {
   formatCommissionType,
   getCommissionDescription,
 } from "@/lib/payment/commission.service";
-import { useUser } from "../user-context";
+import { useUser } from "../../user-context";
 
 interface CartItem {
   item: Item;

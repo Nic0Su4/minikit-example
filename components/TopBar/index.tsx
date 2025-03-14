@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ShoppingCart, Menu, Store, ArrowLeft } from "lucide-react";
-import { getCookieCart } from "@/app/cart/actions";
+import { getCookieCart } from "@/app/(auth)/cart/actions";
 import { usePathname, useRouter } from "next/navigation";
 
 export function TopBar() {

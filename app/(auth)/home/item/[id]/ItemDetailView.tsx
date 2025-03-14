@@ -10,7 +10,7 @@ import { useUser } from "../../../../user-context";
 import { useRouter } from "next/navigation";
 import { PaymentModal } from "./PaymentModal";
 import { useExchangeRate } from "@/hooks/useExchangeRate";
-import { addProductTocart } from "@/app/cart/actions";
+import { addProductTocart } from "@/app/(auth)/cart/actions";
 import Link from "next/link";
 
 interface ItemDetailViewProps {
