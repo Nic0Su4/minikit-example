@@ -14,6 +14,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Carrousel from "./components/carrousel";
+import Image from "next/image";
 
 interface CategoryImage {
   id: string;
@@ -59,6 +60,12 @@ export default function HomePage() {
   return (
     <div className="flex-1 p-4 max-w-md mx-auto w-full space-y-6">
       <Carrousel />
+      <Image
+        src={
+          "https://firebasestorage.googleapis.com/v0/b/kipi-marketplace.firebasestorage.app/o/kipi-marketplace%2Fitems%2F4ISZO6UeGC3TOI8Hpw6J-0-alt.png?alt=media&token=cdd3b621-54b9-406c-b200-e386137572b0"
+        }
+        alt="prueba"
+      />
       <section>
         <h2 className="text-2xl font-bold">Categorías</h2>
         <p className="text-sm text-gray-400">

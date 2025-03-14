@@ -29,23 +29,26 @@ export default function StoreHeader({ store, categories }: StoreHeaderProps) {
         />
       </div>
 
-      {/* Store Logo */}
-      <div className="absolute left-4 -bottom-12 w-24 h-24 rounded-full border-4 border-white bg-white shadow-lg overflow-hidden">
-        <Image
-          src={store.logoImgLink || "/placeholder.svg?height=96&width=96"}
-          alt={store.name}
-          fill
-          className="object-cover"
-        />
-      </div>
-
       {/* Store Info Card */}
       <Card className="mt-6 pt-8">
         <CardContent>
           <div className="flex flex-col space-y-4">
             {/* Store Name and Categories */}
             <div>
-              <h1 className="text-2xl font-bold">{store.name}</h1>
+              <div>
+                {/* Store Logo */}
+                <div className="w-24 h-24 rounded-full border-4 border-white bg-white shadow-lg overflow-hidden">
+                  <Image
+                    src={
+                      store.logoImgLink || "/placeholder.svg?height=96&width=96"
+                    }
+                    alt={store.name}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <h1 className="text-2xl font-bold">{store.name}</h1>
+              </div>
               <div className="flex gap-2 mt-2 flex-wrap">
                 {categories.map((category) => (
                   <span
