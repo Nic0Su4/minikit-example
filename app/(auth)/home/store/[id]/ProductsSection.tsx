@@ -115,7 +115,7 @@ export default function ProductsSection({ items }: ProductsSectionProps) {
                         }
                         alt={item.name}
                         // fill
-                        className="object-cover rounded-t-lg"
+                        className="w-full h-full object-cover rounded-t-lg"
                       />
                     </div>
                     <div
