@@ -52,7 +52,7 @@ export default function ProfilePage() {
                   <div>
                     <h2 className="text-xl font-semibold">{user.username}</h2>
                     <p className="text-sm text-muted-foreground">
-                      Miembro desde 2024
+                      Miembro desde 2025
                     </p>
                   </div>
                 </div>
