@@ -19,6 +19,7 @@ import Image from "next/image";
 interface CategoryImage {
   id: string;
   name: string;
+  description: string;
   href: string;
   imgLink: string | null;
 }
@@ -36,6 +37,7 @@ export default function HomePage() {
         const images = fetchedCategories.map((category: any) => ({
           id: category.id,
           name: category.name,
+          description: category.description,
           href: `/home/category/${category.id}`,
           imgLink: category.imgLink || null,
         }));
@@ -70,63 +72,48 @@ export default function HomePage() {
         {categoriesImages.length > 0 ? (
           categoriesImages.map((category) => (
             <Link key={category.id} href={category.href}>
-              <Card
-                className="overflow-hidden transition-all duration-200 hover:shadow-lg"
-                onMouseEnter={() => setHoveredCard(category.id)}
-                onMouseLeave={() => setHoveredCard(null)}
-              >
-                <CardHeader className="flex justify-center">
-                  <CardTitle className="text-4xl transition-transform duration-500">
-                    {/* {category.icon ? (
-                      <span
-                        className={
-                          hoveredCard === category.id
-                            ? "scale-110"
-                            : "scale-100"
-                        }
-                      >
-                        {category.icon}
-                      </span>
-                    ) : (
-                      <Sparkles
-                        className={
-                          hoveredCard === category.id
-                            ? "scale-110"
-                            : "scale-100"
-                        }
-                      />
-                    )} */}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="text-center">
-                  {category.imgLink ? (
-                    <div className="w-24 h-24 rounded-full border-4 border-white bg-white shadow-lg overflow-hidden mx-auto">
-                      <img
-                        
-                        src={category.imgLink || ""}
-                        alt={category.name}
-                        width={96}
-                        height={96}
-                        // fill
-                        className="object-cover w-full h-full"
-                      />
-                    </div>
-                  ) : (
-                    <Sparkles className="h-12 w-12 text-primary" />
-                  )}
-                  <p className="text-sm">{category.name}</p>
-                </CardContent>
-                <CardFooter className="flex items-center justify-center">
-                  <span className="flex items-center text-sm font-medium text-primary">
-                    Explorar
-                    <ArrowRight
-                      className={`ml-1 h-4 w-4 transition-transform duration-300 ${
-                        hoveredCard === category.id ? "translate-x-1" : ""
-                      }`}
+            <Card
+              className="overflow-hidden transition-all duration-300 ease-in-out rounded-lg shadow-md hover:shadow-xl transform hover:-translate-y-1 bg-white"
+              onMouseEnter={() => setHoveredCard(category.id)}
+              onMouseLeave={() => setHoveredCard(null)}
+            >
+              {/* Encabezado */}
+              <CardHeader className="flex flex-col items-center text-center p-4">
+                <CardTitle className="text-2xl font-semibold text-gray-800 transition-transform duration-500">
+                  {category.name}
+                </CardTitle>
+              </CardHeader>
+
+              {/* Contenido */}
+              <CardContent className="flex flex-col items-center text-center gap-2 p-4">
+                {category.imgLink ? (
+                  <div className="w-28 h-28 rounded-full border-4 border-gray-200 bg-gray-100 shadow-md overflow-hidden transition-transform duration-300 hover:scale-105">
+                    <img
+                      src={category.imgLink || ""}
+                      alt={category.name}
+                      className="object-cover w-full h-full rounded-t-lg"
                     />
-                  </span>
-                </CardFooter>
-              </Card>
+                  </div>
+                ) : (
+                  <Sparkles className="h-14 w-14 text-primary" />
+                )}
+                <p className="text-gray-600 text-sm">{category.description}</p>
+              </CardContent>
+
+              {/* Footer */}
+              <CardFooter className="flex justify-center p-4">
+                <button
+                  className="flex items-center gap-2 text-sm font-medium text-primary transition-transform duration-300 hover:translate-x-1 hover:text-primary-dark"
+                >
+                  Explorar
+                  <ArrowRight
+                    className={`h-4 w-4 transition-transform duration-300 ${
+                      hoveredCard === category.id ? "translate-x-1.5" : ""
+                    }`}
+                  />
+                </button>
+              </CardFooter>
+            </Card>
             </Link>
           ))
         ) : (
