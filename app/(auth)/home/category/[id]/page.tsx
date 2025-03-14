@@ -29,7 +29,7 @@ export default async function CategoryPage({
                       <img
                         src={item.imageImgLink || ""}
                         alt={item.name}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover rounded-t-lg"
                       />
                     </div>
                     <div className="p-3">

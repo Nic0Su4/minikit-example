@@ -48,7 +48,7 @@ export default function CartItemList({ items }: CartItemListProps) {
                 item.item.imageImgLink || "/placeholder.svg?height=80&width=80"
               }
               alt={item.item.name}
-              className="object-cover"
+              className="object-cover w-full h-full"
             />
           </div>
 

@@ -139,7 +139,7 @@ export function CheckoutModal({
                       }
                       alt={item.name}
                       // fill
-                      className="object-cover"
+                      className="object-cover w-full h-full"
                     />
                   </div>
                   <div className="flex-1 min-w-0">

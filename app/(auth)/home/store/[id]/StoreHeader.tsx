@@ -24,7 +24,7 @@ export default function StoreHeader({ store, categories }: StoreHeaderProps) {
           }
           alt={`${store.name} banner`}
           // fill
-          className="object-cover"
+          className="object-cover w-full h-full"
           // priority
         />
       </div>
@@ -44,7 +44,7 @@ export default function StoreHeader({ store, categories }: StoreHeaderProps) {
                     }
                     alt={store.name}
                     // fill
-                    className="object-cover"
+                    className="object-cover w-full h-full"
                   />
                 </div>
                 <h1 className="text-2xl font-bold">{store.name}</h1>

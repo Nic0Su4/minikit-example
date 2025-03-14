@@ -117,7 +117,7 @@ export default function ItemDetailView({
           src={item.imageImgLink || "/placeholder.svg?height=400&width=400"}
           alt={item.name}
           // fill
-          className="object-cover"
+          className="object-cover w-full h-full"
         />
       </div>
 

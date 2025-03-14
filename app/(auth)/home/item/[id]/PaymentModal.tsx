@@ -64,7 +64,7 @@ export function PaymentModal({
                 src={item.imageImgLink || "/placeholder.svg?height=64&width=64"}
                 alt={item.name}
                 // fill
-                className="object-cover"
+                className="object-cover w-full h-full"
               />
             </div>
             <div>
