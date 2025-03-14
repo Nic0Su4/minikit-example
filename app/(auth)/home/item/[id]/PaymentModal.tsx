@@ -60,10 +60,10 @@ export function PaymentModal({
         <div className="space-y-4">
           <div className="flex items-start gap-3">
             <div className="w-16 h-16 bg-gray-200 rounded-md flex-shrink-0 relative overflow-hidden">
-              <Image
+              <img
                 src={item.imageImgLink || "/placeholder.svg?height=64&width=64"}
                 alt={item.name}
-                fill
+                // fill
                 className="object-cover"
               />
             </div>

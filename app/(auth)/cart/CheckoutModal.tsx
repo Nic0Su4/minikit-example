@@ -132,13 +132,13 @@ export function CheckoutModal({
                   className="flex items-start gap-3 p-2 border-b last:border-b-0"
                 >
                   <div className="w-12 h-12 bg-gray-200 rounded-md flex-shrink-0 relative overflow-hidden">
-                    <Image
+                    <img
                       src={
                         item.imageImgLink ||
                         "/placeholder.svg?height=48&width=48"
                       }
                       alt={item.name}
-                      fill
+                      // fill
                       className="object-cover"
                     />
                   </div>

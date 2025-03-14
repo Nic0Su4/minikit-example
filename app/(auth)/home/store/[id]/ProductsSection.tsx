@@ -108,13 +108,13 @@ export default function ProductsSection({ items }: ProductsSectionProps) {
                           : "aspect-square w-full"
                       } relative`}
                     >
-                      <Image
+                      <img
                         src={
                           item.imageImgLink ||
                           "/placeholder.svg?height=200&width=200"
                         }
                         alt={item.name}
-                        fill
+                        // fill
                         className="object-cover rounded-t-lg"
                       />
                     </div>

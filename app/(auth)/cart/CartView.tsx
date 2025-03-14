@@ -43,12 +43,11 @@ export default function CartItemList({ items }: CartItemListProps) {
           className="flex items-center gap-4 p-4 bg-white rounded-lg border"
         >
           <div className="w-20 h-20 bg-gray-200 rounded-md relative flex-shrink-0 overflow-hidden">
-            <Image
+            <img
               src={
                 item.item.imageImgLink || "/placeholder.svg?height=80&width=80"
               }
               alt={item.item.name}
-              fill
               className="object-cover"
             />
           </div>

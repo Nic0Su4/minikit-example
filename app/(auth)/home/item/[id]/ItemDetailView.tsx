@@ -113,10 +113,10 @@ export default function ItemDetailView({
     <div className="flex flex-col max-w-md mx-auto">
       {/* Product Image */}
       <div className="w-full aspect-square bg-gray-200 relative">
-        <Image
+        <img
           src={item.imageImgLink || "/placeholder.svg?height=400&width=400"}
           alt={item.name}
-          fill
+          // fill
           className="object-cover"
         />
       </div>

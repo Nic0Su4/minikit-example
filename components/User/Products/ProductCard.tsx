@@ -31,7 +31,7 @@ export default function ProductCard({ product, addToCart }: ProductCardProps) {
           <p className="text-red-600 mt-1">Agotado</p>
         )}
         {product.imagen_url && (
-          <Image
+          <img
             src={product.imagen_url}
             alt={product.nombre}
             width={96}

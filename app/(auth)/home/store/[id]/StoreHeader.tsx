@@ -17,13 +17,13 @@ export default function StoreHeader({ store, categories }: StoreHeaderProps) {
     <div className="relative">
       {/* Banner Image */}
       <div className="w-full h-48 relative bg-gray-200 rounded-t-xl overflow-hidden">
-        <Image
+        <img
           src={
             store.local?.referenceImgLink ||
             "/placeholder.svg?height=192&width=768"
           }
           alt={`${store.name} banner`}
-          fill
+          // fill
           className="object-cover"
           priority
         />
@@ -38,12 +38,12 @@ export default function StoreHeader({ store, categories }: StoreHeaderProps) {
               <div>
                 {/* Store Logo */}
                 <div className="w-24 h-24 rounded-full border-4 border-white bg-white shadow-lg overflow-hidden">
-                  <Image
+                  <img
                     src={
                       store.logoImgLink || "/placeholder.svg?height=96&width=96"
                     }
                     alt={store.name}
-                    fill
+                    // fill
                     className="object-cover"
                   />
                 </div>

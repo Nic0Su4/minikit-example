@@ -26,10 +26,10 @@ export default async function CategoryPage({
                 <CardContent className="p-0">
                   <div className="flex flex-col">
                     <div className="bg-gray-200 aspect-square w-full relative">
-                      <Image
+                      <img
                         src={item.imageImgLink || ""}
                         alt={item.name}
-                        fill
+                        // fill
                         className="object-cover"
                       />
                     </div>
