@@ -42,7 +42,7 @@ export default function OrderDetails({ buy }: OrderDetailsProps) {
               return {
                 name: itemDetails.name,
                 price: item.price || itemDetails.price,
-                quantity: item.ammount,
+                quantity: item.amount,
                 id: itemDetails.id,
               };
             })
