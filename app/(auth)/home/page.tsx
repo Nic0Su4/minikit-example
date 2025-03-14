@@ -79,24 +79,20 @@ export default function HomePage() {
             >
               {/* Encabezado */}
               <CardHeader className="flex flex-col items-center text-center p-4">
-                <CardTitle className="text-2xl font-semibold text-gray-800 transition-transform duration-500">
-                  {category.name}
-                </CardTitle>
               </CardHeader>
 
               {/* Contenido */}
               <CardContent className="flex flex-col items-center text-center gap-2 p-4">
                 {category.imgLink ? (
-                  <div className="w-28 h-28 rounded-full border-4 border-gray-200 bg-gray-100 shadow-md overflow-hidden transition-transform duration-300 hover:scale-105">
-                    <img
-                      src={category.imgLink || ""}
-                      alt={category.name}
-                      className="object-cover w-full h-full rounded-t-lg"
-                    />
-                  </div>
+                  <img
+                    src={category.imgLink || ""}
+                    alt={category.name}
+                    className="object-cover w-full h-full rounded-t-lg"
+                  />
                 ) : (
                   <Sparkles className="h-14 w-14 text-primary" />
                 )}
+                <h3 className="text-lg font-semibold">{category.name}</h3>
                 <p className="text-gray-600 text-sm">{category.description}</p>
               </CardContent>
 
