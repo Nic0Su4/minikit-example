@@ -1,127 +1,167 @@
 "use client";
 
 import type { Store } from "@/db/types";
-import { PhoneIcon as WhatsappIcon } from "lucide-react";
+import { PhoneIcon as WhatsappIcon, Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface StoreHeaderProps {
   store: Store;
-  categories: { id: string; name: string }[]; // Pasamos las categorías ya resueltas
+  categories: { id: string; name: string }[];
 }
 
 export default function StoreHeader({ store, categories }: StoreHeaderProps) {
   return (
-    <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
-      <div className="flex items-start gap-4">
-        {/* Store Logo */}
-        <div className="w-16 h-16 bg-gray-200 rounded-full relative overflow-hidden flex-shrink-0">
-          <Image
-            src={store.logoImgLink || "/placeholder.svg?height=64&width=64"}
-            alt={store.name}
-            fill
-            className="object-cover"
-          />
-        </div>
-
-        {/* Store Info */}
-        <div className="flex-1">
-          <h1 className="text-xl font-bold">{store.name}</h1>
-
-          {/* Categories */}
-          <div className="flex gap-2 mt-1 flex-wrap">
-            {categories.map((category) => (
-              <span
-                key={category.id}
-                className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full"
-              >
-                {category.name}
-              </span>
-            ))}
-          </div>
-
-          {/* Contact Details */}
-          <div className="mt-4 space-y-2">
-            {/* Address */}
-            {store.local?.direction && (
-              <div className="flex items-start gap-2 text-sm text-gray-600">
-                <svg
-                  className="w-4 h-4 mt-0.5 flex-shrink-0"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-                <span>{store.local.direction.direction}</span>
-              </div>
-            )}
-
-            {/* Phone */}
-            {store.contact?.number && (
-              <div className="flex items-center gap-2 text-sm">
-                <svg
-                  className="w-4 h-4 flex-shrink-0"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                  />
-                </svg>
-                <span className="text-gray-600">{store.contact.number}</span>
-                {/* WhatsApp Link */}
-                <Link
-                  href={`https://wa.me/${store.contact.number.replace(
-                    /\D/g,
-                    ""
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-green-600 hover:text-green-700"
-                >
-                  <WhatsappIcon className="w-4 h-4" />
-                </Link>
-              </div>
-            )}
-
-            {/* Email */}
-            {store.contact?.email && (
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <svg
-                  className="w-4 h-4 flex-shrink-0"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
-                </svg>
-                <span>{store.contact.email}</span>
-              </div>
-            )}
-          </div>
-        </div>
+    <div className="relative">
+      {/* Banner Image */}
+      <div className="w-full h-48 relative bg-gray-200 rounded-t-xl overflow-hidden">
+        <Image
+          src={
+            store.local?.referenceImgLink ||
+            "/placeholder.svg?height=192&width=768"
+          }
+          alt={`${store.name} banner`}
+          fill
+          className="object-cover"
+          priority
+        />
       </div>
+
+      {/* Store Logo */}
+      <div className="absolute left-4 -bottom-12 w-24 h-24 rounded-full border-4 border-white bg-white shadow-lg overflow-hidden">
+        <Image
+          src={store.logoImgLink || "/placeholder.svg?height=96&width=96"}
+          alt={store.name}
+          fill
+          className="object-cover"
+        />
+      </div>
+
+      {/* Store Info Card */}
+      <Card className="mt-6 pt-8">
+        <CardContent>
+          <div className="flex flex-col space-y-4">
+            {/* Store Name and Categories */}
+            <div>
+              <h1 className="text-2xl font-bold">{store.name}</h1>
+              <div className="flex gap-2 mt-2 flex-wrap">
+                {categories.map((category) => (
+                  <span
+                    key={category.id}
+                    className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full"
+                  >
+                    {category.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Contact Information */}
+            <div className="space-y-3 text-sm">
+              {/* Address */}
+              {store.local?.direction && (
+                <div className="flex items-start gap-3">
+                  <MapPin className="w-5 h-5 text-gray-500 flex-shrink-0" />
+                  <div>
+                    <p className="text-gray-600">
+                      {store.local.direction.direction}
+                    </p>
+                    {store.local.reference && (
+                      <p className="text-gray-500 text-xs mt-0.5">
+                        {store.local.reference}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Phone Numbers */}
+              {store.contact?.number && (
+                <div className="flex items-start gap-3">
+                  <Phone className="w-5 h-5 text-gray-500 flex-shrink-0" />
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-gray-600">
+                        {store.contact.number}
+                      </span>
+                      <Link
+                        href={`https://wa.me/${store.contact.number.replace(
+                          /\D/g,
+                          ""
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 px-2 text-green-600 hover:text-green-700 hover:bg-green-50"
+                        >
+                          <WhatsappIcon className="w-4 h-4" />
+                        </Button>
+                      </Link>
+                    </div>
+                    {store.contact.altNumbers.map((number, index) => (
+                      <div key={index} className="flex items-center gap-2">
+                        <span className="text-gray-600">{number}</span>
+                        <Link
+                          href={`https://wa.me/${number.replace(/\D/g, "")}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 px-2 text-green-600 hover:text-green-700 hover:bg-green-50"
+                          >
+                            <WhatsappIcon className="w-4 h-4" />
+                          </Button>
+                        </Link>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Email */}
+              {store.contact?.email && (
+                <div className="flex items-start gap-3">
+                  <Mail className="w-5 h-5 text-gray-500 flex-shrink-0" />
+                  <span className="text-gray-600">{store.contact.email}</span>
+                </div>
+              )}
+
+              {/* Social Media Links */}
+              {store.contact?.socialMedia &&
+                store.contact.socialMedia.size > 0 && (
+                  <div className="flex gap-2 pt-2">
+                    {Array.from(store.contact.socialMedia.entries()).map(
+                      ([platform, url]) => (
+                        <Link
+                          key={platform}
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-gray-500 hover:text-gray-700"
+                        >
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="h-8 px-3"
+                          >
+                            {platform}
+                          </Button>
+                        </Link>
+                      )
+                    )}
+                  </div>
+                )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

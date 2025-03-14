@@ -2,7 +2,7 @@ import { getStoreById } from "@/db/store";
 import { getItemsByStore } from "@/db/item";
 import { getCategoryById } from "@/db/category";
 import StoreHeader from "./StoreHeader";
-import ProductsSection from "../ProductsSection";
+import ProductsSection from "./ProductsSection";
 
 export default async function StorePage({
   params,
@@ -26,7 +26,7 @@ export default async function StorePage({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-4 py-6 max-w-80">
         <StoreHeader store={store} categories={categories} />
         <ProductsSection items={items} />
       </div>
