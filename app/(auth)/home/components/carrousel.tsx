@@ -9,9 +9,9 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 const featuredItems = [
   {
     id: 1,
-    title: "Compra Instantánea con Soles",
+    title: "Compra Instantánea con WorldCoins",
     description:
-      "Usa tus soles para comprar productos en nuestro marketplace al instante y sin complicaciones.",
+      "Usa tus WorldCoins para comprar productos en nuestro marketplace al instante y sin complicaciones.",
     cta: "Comprar Ahora",
     bgColor: "from-blue-500 to-indigo-700",
   },

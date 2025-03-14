@@ -20,7 +20,7 @@ interface CategoryImage {
   id: string;
   name: string;
   href: string;
-  icon: string | null;
+  imgLink: string | null;
 }
 
 export default function HomePage() {
@@ -37,8 +37,7 @@ export default function HomePage() {
           id: category.id,
           name: category.name,
           href: `/home/category/${category.id}`,
-          // Si no existe un icono, se usa un icono por defecto (Sparkles)
-          icon: category.icon || null,
+          imgLink: category.imgLink || null,
         }));
         setCategoriesImages(images);
       } catch (error) {
@@ -60,8 +59,6 @@ export default function HomePage() {
   return (
     <div className="flex-1 p-4 max-w-md mx-auto w-full space-y-6">
       <Carrousel />
-      <Image src={"https://robohash.org/test"} alt="prueba" />
-      <img src="https://robohash.org/test" alt="prueba" />
       <section>
         <h2 className="text-2xl font-bold">Categorías</h2>
         <p className="text-sm text-gray-400">
@@ -80,7 +77,7 @@ export default function HomePage() {
               >
                 <CardHeader className="flex justify-center">
                   <CardTitle className="text-4xl transition-transform duration-500">
-                    {category.icon ? (
+                    {/* {category.icon ? (
                       <span
                         className={
                           hoveredCard === category.id
@@ -98,10 +95,25 @@ export default function HomePage() {
                             : "scale-100"
                         }
                       />
-                    )}
+                    )} */}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="text-center">
+                  {category.imgLink ? (
+                    <div className="w-24 h-24 rounded-full border-4 border-white bg-white shadow-lg overflow-hidden mx-auto">
+                      <img
+                        
+                        src={category.imgLink || ""}
+                        alt={category.name}
+                        width={96}
+                        height={96}
+                        // fill
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                  ) : (
+                    <Sparkles className="h-12 w-12 text-primary" />
+                  )}
                   <p className="text-sm">{category.name}</p>
                 </CardContent>
                 <CardFooter className="flex items-center justify-center">
