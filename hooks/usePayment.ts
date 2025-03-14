@@ -132,7 +132,7 @@ export function usePayment() {
         string,
         {
           itemId: string;
-          ammount: number;
+          amount: number;
           redeemed: number;
           price: number;
           name: string;
@@ -148,7 +148,7 @@ export function usePayment() {
 
         storeItemsMap.get(storeId)?.push({
           itemId: item.id,
-          ammount: quantity,
+          amount: quantity,
           redeemed: 0,
           price: item.price,
           name: item.name,

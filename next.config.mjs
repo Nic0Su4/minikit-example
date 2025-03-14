@@ -9,7 +9,15 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "https://kbswiwnnsqgxhcdzrfvt.supabase.co/"
-      }
+      },
+      {
+        protocol: "https",
+        hostname: "https://firebasestorage.googleapis.com/v0/b/kipi-marketplace.firebasestorage.app/"
+      },
+      {
+        protocol: "https",
+        hostname: "https://kbswiwnnsqgxhcdzrfvt.supabase.co/"
+      },
     ]
   }
 };

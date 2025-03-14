@@ -5,7 +5,7 @@ export interface Client {
 
 export interface BuyItem {
   itemId: string;
-  ammount: number;
+  amount: number;
   redeemed: number;
   price: number;
 }
