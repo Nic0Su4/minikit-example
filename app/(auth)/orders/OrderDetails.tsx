@@ -5,8 +5,7 @@ import { useEffect, useState } from "react";
 import { getStoreById } from "@/db/store";
 import { getItemById } from "@/db/item";
 import { QRCodeSVG } from "qrcode.react";
-import { CheckCircle, Download } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { CheckCircle, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface OrderDetailsProps {
@@ -29,14 +28,15 @@ export default function OrderDetails({ buy }: OrderDetailsProps) {
     [key: string]: StoreDetails;
   }>({});
   const [loading, setLoading] = useState(true);
-  const [downloading, setDownloading] = useState(false);
   const [isFullyRedeemed, setIsFullyRedeemed] = useState(false);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalRedeemed, setTotalRedeemed] = useState(0);
 
   useEffect(() => {
     const loadStoreDetails = async () => {
       const details: { [key: string]: StoreDetails } = {};
-      let totalItems = 0;
-      let totalRedeemed = 0;
+      let itemsCount = 0;
+      let redeemedCount = 0;
 
       for (const entry of buy.buys) {
         try {
@@ -44,8 +44,8 @@ export default function OrderDetails({ buy }: OrderDetailsProps) {
           const items = await Promise.all(
             entry.items.map(async (item) => {
               const itemDetails = await getItemById(item.itemId);
-              totalItems += item.amount;
-              totalRedeemed += item.redemed;
+              itemsCount += item.amount;
+              redeemedCount += item.redemed;
               return {
                 name: itemDetails.name,
                 price: item.price || itemDetails.price,
@@ -68,44 +68,15 @@ export default function OrderDetails({ buy }: OrderDetailsProps) {
         }
       }
 
-      setIsFullyRedeemed(totalItems > 0 && totalItems === totalRedeemed);
+      setTotalItems(itemsCount);
+      setTotalRedeemed(redeemedCount);
+      setIsFullyRedeemed(itemsCount > 0 && itemsCount === redeemedCount);
       setStoreDetails(details);
       setLoading(false);
     };
 
     loadStoreDetails();
   }, [buy]);
-
-  const handleDownloadQR = () => {
-    setDownloading(true);
-
-    const svg = document.querySelector(`#qr-code-${buy.paymentId} svg`);
-    if (!svg) {
-      setDownloading(false);
-      return;
-    }
-
-    const svgData = new XMLSerializer().serializeToString(svg);
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    const img = new Image();
-
-    img.onload = () => {
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx?.drawImage(img, 0, 0);
-      const pngFile = canvas.toDataURL("image/png");
-
-      const downloadLink = document.createElement("a");
-      downloadLink.download = `qr-compra-${buy.paymentId.slice(-5)}.png`;
-      downloadLink.href = pngFile;
-      downloadLink.click();
-
-      setDownloading(false);
-    };
-
-    img.src = "data:image/svg+xml;base64," + btoa(svgData);
-  };
 
   if (loading) {
     return (
@@ -116,11 +87,70 @@ export default function OrderDetails({ buy }: OrderDetailsProps) {
   }
 
   const kipiBusinessUrl = "https://kipi-business.vercel.app";
-
   const qrUrl = `${kipiBusinessUrl}/scan-qr?buyId=${buy.id}`;
+  const pendingItems = totalItems - totalRedeemed;
 
   return (
     <div className="border-t">
+      {/* Resumen de canje */}
+      <div className="p-4 bg-gray-50 border-b">
+        <div className="flex justify-between items-center">
+          <h3 className="font-medium">Resumen de canje</h3>
+          <Badge
+            variant="outline"
+            className={`${
+              isFullyRedeemed
+                ? "text-green-600 border-green-200 bg-green-50"
+                : "text-amber-600 border-amber-200 bg-amber-50"
+            }`}
+          >
+            {isFullyRedeemed ? (
+              <CheckCircle className="w-3 h-3 mr-1" />
+            ) : (
+              <Clock className="w-3 h-3 mr-1" />
+            )}
+            {isFullyRedeemed ? "Completado" : "Pendiente"}
+          </Badge>
+        </div>
+
+        <div className="mt-2 grid grid-cols-3 gap-2 text-center">
+          <div className="bg-white p-2 rounded-md">
+            <p className="text-xs text-gray-500">Total</p>
+            <p className="font-medium">{totalItems}</p>
+          </div>
+          <div className="bg-white p-2 rounded-md">
+            <p className="text-xs text-gray-500">Canjeados</p>
+            <p className="font-medium text-green-600">{totalRedeemed}</p>
+          </div>
+          <div className="bg-white p-2 rounded-md">
+            <p className="text-xs text-gray-500">Pendientes</p>
+            <p className="font-medium text-amber-600">{pendingItems}</p>
+          </div>
+        </div>
+
+        <div className="mt-2">
+          <div className="flex justify-between text-xs text-gray-500 mb-1">
+            <span>Progreso de canje</span>
+            <span>
+              {totalItems > 0
+                ? Math.round((totalRedeemed / totalItems) * 100)
+                : 0}
+              %
+            </span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div
+              className="bg-green-500 h-2 rounded-full"
+              style={{
+                width: `${
+                  totalItems > 0 ? (totalRedeemed / totalItems) * 100 : 0
+                }%`,
+              }}
+            ></div>
+          </div>
+        </div>
+      </div>
+
       {/* Store Sections */}
       {Object.entries(storeDetails).map(([storeId, store]) => (
         <div key={storeId} className="p-4 border-b last:border-b-0">
@@ -129,6 +159,7 @@ export default function OrderDetails({ buy }: OrderDetailsProps) {
             {store.items.map((item) => {
               const isItemFullyRedeemed =
                 item.quantity > 0 && item.quantity === item.redemed;
+              const pendingCount = item.quantity - item.redemed;
 
               return (
                 <div
@@ -142,7 +173,7 @@ export default function OrderDetails({ buy }: OrderDetailsProps) {
                       <p className={isItemFullyRedeemed ? "text-gray-500" : ""}>
                         {item.name}
                       </p>
-                      {isItemFullyRedeemed && (
+                      {isItemFullyRedeemed ? (
                         <Badge
                           variant="outline"
                           className="text-green-600 border-green-200 bg-green-50"
@@ -150,33 +181,39 @@ export default function OrderDetails({ buy }: OrderDetailsProps) {
                           <CheckCircle className="w-3 h-3 mr-1" />
                           Canjeado
                         </Badge>
-                      )}
+                      ) : item.redemed > 0 ? (
+                        <Badge
+                          variant="outline"
+                          className="text-amber-600 border-amber-200 bg-amber-50"
+                        >
+                          <Clock className="w-3 h-3 mr-1" />
+                          Parcial
+                        </Badge>
+                      ) : null}
                     </div>
                     <p className="text-gray-500 text-xs">
                       PRD-{item.id.slice(-3)}
                     </p>
 
-                    {/* Mostrar progreso de canje */}
-                    {item.redemed > 0 && (
-                      <div className="mt-1">
-                        <div className="flex justify-between text-xs text-gray-500 mb-1">
-                          <span>
-                            Canjeados: {item.redemed} de {item.quantity}
-                          </span>
-                          <span>
-                            {Math.round((item.redemed / item.quantity) * 100)}%
-                          </span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-1.5">
-                          <div
-                            className="bg-green-500 h-1.5 rounded-full"
-                            style={{
-                              width: `${(item.redemed / item.quantity) * 100}%`,
-                            }}
-                          ></div>
-                        </div>
+                    {/* Mostrar progreso de canje siempre */}
+                    <div className="mt-1">
+                      <div className="flex justify-between text-xs text-gray-500 mb-1">
+                        <span>
+                          {item.redemed} canjeados · {pendingCount} pendientes
+                        </span>
+                        <span>
+                          {Math.round((item.redemed / item.quantity) * 100)}%
+                        </span>
                       </div>
-                    )}
+                      <div className="w-full bg-gray-200 rounded-full h-1.5">
+                        <div
+                          className="bg-green-500 h-1.5 rounded-full"
+                          style={{
+                            width: `${(item.redemed / item.quantity) * 100}%`,
+                          }}
+                        ></div>
+                      </div>
+                    </div>
                   </div>
                   <div className="flex items-center gap-4">
                     <span>{item.quantity}x</span>
@@ -210,7 +247,7 @@ export default function OrderDetails({ buy }: OrderDetailsProps) {
             id={`qr-code-${buy.paymentId}`}
             className={`p-2 bg-white rounded-lg ${
               isFullyRedeemed ? "opacity-50" : ""
-            }`}
+            } relative`}
           >
             <QRCodeSVG
               value={qrUrl}
@@ -228,17 +265,6 @@ export default function OrderDetails({ buy }: OrderDetailsProps) {
               </div>
             )}
           </div>
-
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleDownloadQR}
-            disabled={downloading || isFullyRedeemed}
-            className="mt-2 text-xs"
-          >
-            <Download className="w-3 h-3 mr-1" />
-            {downloading ? "Descargando..." : "Descargar QR"}
-          </Button>
 
           <p className="text-xs text-center text-gray-500 mt-2">
             {isFullyRedeemed
